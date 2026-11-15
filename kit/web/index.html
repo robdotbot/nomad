@@ -32,12 +32,17 @@
   <h2 class="sec">Topics</h2>
   <div class="cards" id="topics"></div>
 
+  <h2 class="sec">Watch <a href="watch.html">All videos</a></h2>
+  <div class="cards" id="watch"></div>
+  <div class="vrow" id="picks" style="margin-top:14px"></div>
+
   <h2 class="sec">Library &amp; tools</h2>
   <div class="cards" id="tools"></div>
 </main>
 <script src="data/docs.js"></script>
 <script src="data/emergencies.js"></script>
 <script src="data/topics.js"></script>
+<script src="data/videos.js"></script>
 <script src="app.js"></script>
 <script>
   $('#logo').innerHTML = icon('life');
@@ -69,6 +74,19 @@
       <div class="ico">${icon(ic)}</div><div>${chk ? '<span class="status">…</span>' : ''}<b>${t}</b><small>${s}</small></div></a>`).join('');
   wireStatus();
 
+  // Watch: all videos, then one card per channel, then a row of picks.
+  if ((window.VIDEOS || []).length) {
+    const C = VIDEO_COLLECTIONS, chans = [...new Set(C.map(c => c.channel))];
+    const cols = [['#5e5ce6', '#8944d8'], ['#bf5af2', '#7d2ab8'], ['#ff375f', '#b4245d'], ['#30b0c7', '#0e6f85']];
+    $('#watch').innerHTML = `<a class="card vivid" href="watch.html" style="${grad(...cols[0])}"><div class="ico">${icon('film')}</div><div><b>How-to videos</b><small>${VIDEOS.length} videos · top picks for every topic</small></div></a>` +
+      chans.map((ch, i) => { const n = C.filter(c => c.channel === ch).reduce((s, c) => s + c.count, 0);
+        return `<a class="card vivid" href="watch.html?t=${encodeURIComponent('ch:' + ch)}" style="${grad(...cols[(i + 1) % cols.length])}"><div class="ico">${icon('film')}</div><div><b>${esc(ch)}</b><small>${n} videos</small></div></a>`; }).join('');
+    const seen = new Set(), picks = [];
+    for (const t of ['medical', 'water', 'food', 'power', 'home', 'survival', 'comms']) for (const v of videosFor(t, 2)) if (!seen.has(v)) { seen.add(v); picks.push(v); }
+    $('#picks').innerHTML = picks.slice(0, 10).map(videoCard).join('');
+    fixVideoLinks($('#picks'));
+  } else { $('#watch').innerHTML = '<p style="color:var(--mute)">No videos yet: run ./build.sh zim videos-index</p>'; }
+
   // Pills: offline state, library size, docs.
   (async () => {
     $('#netstate').textContent = navigator.onLine ? 'ONLINE' : 'OFFLINE';   // no outside request
@@ -78,6 +96,7 @@
     pills.push(books ? `<span class="pill blue">${icon('book')}${books} books</span>` : `<span class="pill red" title="Kiwix app → Hotspot → Start">${icon('book')}Library off</span>`);
     pills.push(`<span class="pill orange">${icon('doc')}${(window.DOCS || []).length} guides</span>`);
     pills.push(`<span class="pill blue">${icon('cross')}${BIBLES.length} Bibles</span>`);
+    if ((window.VIDEOS || []).length) pills.push(`<span class="pill orange">${icon('film')}${VIDEOS.length} videos</span>`);
     $('#pills').innerHTML = pills.join('');
   })();
   wireSearch($('#q'));

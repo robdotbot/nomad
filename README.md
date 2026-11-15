@@ -38,7 +38,8 @@ Faster, if the NAS backup exists: `scripts/restore-from-nas.sh` copies everythin
 | `installers` | Kiwix, Ollama, Python, Kolibri wheels, pmtiles, Baofeng CPS; writes `SHA256SUMS` | 350 MB | `manifests/installers.tsv` |
 | `maps` | US West (Las Vegas, Henderson) and San Antonio, street level | 3.6 GB | Protomaps build, `manifests/maps.tsv` |
 | `near-index` | Hospitals, fire stations, police, pharmacies, water, groceries, fuel around each city (`web/data/near.js`); needs node | 0.1 MB | the maps |
-| `zim` | Wikipedia (maxi), MDWiki, iFixit, Wikivoyage, 5 zimgit guides; SHA-256 checked | 150 GB | `manifests/zim.txt` |
+| `zim` | Wikipedia (maxi), MDWiki, iFixit, Wikivoyage, 5 zimgit guides, 6 how-to video collections; SHA-256 checked | 165 GB | `manifests/zim.txt` |
+| `videos-index` | Video titles, lengths and thumbnails for the Watch pages (`web/data/videos.js`, `web/vthumbs/`); needs python3 | 20 MB | the video ZIMs |
 | `models` | `qwen3.8:27b-q8_0`, `qwen3.5:9b` | 37 GB | Ollama |
 | `kolibri` | Khan Academy (US) | 61 GB | Kolibri |
 | `vault` (manual) | AES-256 encrypted sparse bundle | — | — |
@@ -67,6 +68,8 @@ Edit the manifest or `config.sh`, then re-run that step:
 - **Topics** (`data/topics.js`): Water, Food, Medical, Kids, Power, Comms, Home, Security, Repair, Survival,
   Faith, Reference. Keyword chips search the Kiwix library; docs show with thumbnails.
 - **Search**: instant matches across checklists, topics and docs, plus full-text library search and "ask the AI".
+- **Watch** (`watch.html`): 600+ how-to videos from Urban Prepper, Learn Self Reliance and Canadian Prepper
+  (Kiwix video ZIMs), sorted by topic and searchable; each topic page shows its videos. They play in Kiwix.
 - **Near Home** (`map.html?near=1`): nearest ER, urgent care, fire, police, pharmacy, water, groceries, fuel.
 
 ## Running it (on the drive)

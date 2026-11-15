@@ -8,3 +8,10 @@ other/zimgit-medicine_en_2024-08.zim
 other/zimgit-water_en_2024-08.zim
 other/zimgit-food-preparation_en_2025-04.zim
 other/zimgit-knots_en_2024-08.zim
+# How-to videos (YouTube channels packaged by Kiwix). Shown under Watch in the Command Center.
+videos/urban-prepper_en_all_2026-08.zim
+videos/lrnselfreliance_en_all_2026-09.zim
+videos/canadian-prepper_en_preppingfood_2026-10.zim
+videos/canadian-prepper_en_winterprepping_2026-08.zim
+videos/canadian-prepper_en_bugoutconcepts_2026-08.zim
+videos/canadian-prepper_en_bugoutroll_2026-10.zim

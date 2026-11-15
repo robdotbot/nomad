@@ -11,6 +11,7 @@
 <script src="data/docs.js"></script>
 <script src="data/emergencies.js"></script>
 <script src="data/topics.js"></script>
+<script src="data/videos.js"></script>
 <script src="app.js"></script>
 <script>
   const main = $('#main');
@@ -30,6 +31,7 @@
     <div class="chips">${(t.keywords || []).map(k => `<a href="${kiwixSearch(k)}" target="_blank">${esc(k)}</a>`).join('')}</div>
     ${ems.length ? `<h2 class="sec">Emergency checklists</h2><div class="etiles">${ems.map(e =>
       `<a class="etile" href="emergency.html?id=${e.id}" style="${grad(...e.c)}">${icon(e.icon)}<b>${esc(e.title)}</b></a>`).join('')}</div>` : ''}
+    ${videosFor(t.id, 1).length ? `<h2 class="sec">Videos <a href="watch.html?t=${t.id}">All videos</a></h2><div class="vrow" id="vids">${videosFor(t.id, 12).map(videoCard).join('')}</div>` : ''}
     <div id="books"></div>
     ${t.bibles ? `<h2 class="sec">Bibles</h2><div class="cards">${BIBLES.map(([p, n, s]) =>
       `<a class="card" href="${p}" target="_blank" style="${grad(...t.c)}"><div class="ico">${icon('cross')}</div><div><b>${esc(n)}</b><small>${esc(s)}</small></div></a>`).join('')}</div>` : ''}
@@ -58,7 +60,8 @@
     }).join('')}</div>`;
   })();
 
-  wireSearch($('#q'), { prefix: '', filter: r => r.k !== 'Topic' && (r.k === 'Emergency' ? (t.emergencies || []).some(id => r.href.endsWith('=' + id)) : (t.docs || []).includes(r.href) || (t.bibles && r.k === 'Bible')) });
+  if ($('#vids')) fixVideoLinks($('#vids'));
+  wireSearch($('#q'), { prefix: '', filter: r => r.k !== 'Topic' && (r.k === 'Emergency' ? (t.emergencies || []).some(id => r.href.endsWith('=' + id)) : (t.docs || []).includes(r.href) || (t.bibles && r.k === 'Bible') || (r.k === 'Video' && !!VIDEO_TOPICS[t.id]?.test(r.t))) });
 </script>
 </body>
 </html>

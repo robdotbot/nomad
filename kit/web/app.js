@@ -123,6 +123,7 @@ function searchIndex() {
   (window.FAMILY_PAGES || []).forEach(f => out.push({ t: f.title, k: 'Family', href: 'family.html?id=' + f.id, ic: f.icon, text: f.title + ' ' + f.sub }));
   allDocs().forEach(d => out.push({ t: d.title, k: d.path.endsWith('.pdf') ? 'PDF' : 'Web page', href: d.path, ic: 'doc', text: d.title + ' ' + d.path, blank: true }));
   BIBLES.forEach(([p, t, s]) => out.push({ t, k: 'Bible', href: p, ic: 'cross', text: t + ' ' + s + ' bible scripture', blank: true }));
+  (window.VIDEOS || []).forEach(v => out.push({ t: v.t, k: 'Video', href: videoHref(v), ic: 'film', text: v.t + ' video ' + VIDEO_COLLECTIONS[v.c].channel, blank: true }));
   return out;
 }
 function wireSearch(input, opts = {}) {
@@ -156,4 +157,52 @@ function wireSearch(input, opts = {}) {
     else if (e.key === 'Escape') { input.value = ''; render(); }
   });
   document.addEventListener('click', e => { if (!input.parentNode.contains(e.target)) box.classList.remove('open'); });
+}
+
+// ---- Videos (data/videos.js, from scripts/videos-index.sh). They play inside the Kiwix library.
+const VIDEO_TOPICS = {
+  water: /\bwater|\bfilters?\b|purif|\bwells?\b|\brain(water)?\b/i,
+  food: /food|meals?\b|\bmres?\b|canning|freeze.?dr|\brice\b|\bbeans?\b|pantry|stockpil|garden|\bcook|\brations?\b|calorie/i,
+  medical: /first aid|ifak|medic|trauma|wound|tourniquet|bleed|med kit|antibiotic|injur/i,
+  kids: /\bkids?\b|child|family/i,
+  power: /solar|generator|\bpower\b|batter|electric|blackout|\bgrid\b/i,
+  comms: /radio|\bham\b|gmrs|comms|communicat|baofeng|frequenc/i,
+  home: /winter|\bheat|shelter|stove|\bhouse|\bhome\b|blackout|earthquake|\bcold\b|freez|\bstorms?\b/i,
+  security: /security|defen[cs]e|\blocks?\b|gr[ae]y man|safe room|opsec/i,
+  repair: /repair|\bfix|tool|maintenan|sharpen/i,
+  survival: /surviv|bushcraft|knife|knives|\bknots?\b|\bfire\b|navigat|compass|bug.?out|\bedc\b|\bkits?\b|\bcamp|\btarps?\b/i,
+};
+const fmtDur = s => s >= 3600 ? `${Math.floor(s / 3600)}:${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}` : `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+// Kiwix serves each book under a path from its catalog; fall back to the file name.
+let kiwixPaths = null;
+async function kiwixBookPaths() {
+  if (kiwixPaths) return kiwixPaths;
+  kiwixPaths = {};
+  try {
+    const x = await (await fetch(KIWIX + '/catalog/v2/entries?count=200', { signal: AbortSignal.timeout(2500) })).text();
+    const d = new DOMParser().parseFromString(x, 'application/xml');
+    for (const en of d.getElementsByTagName('entry')) {
+      const name = en.getElementsByTagName('name')[0]?.textContent;
+      const href = [...en.getElementsByTagName('link')].find(l => l.getAttribute('type') === 'text/html')?.getAttribute('href');
+      if (name && href) kiwixPaths[name] = href;
+    }
+  } catch {}
+  return kiwixPaths;
+}
+const videoHref = (v, paths = kiwixPaths || {}) => {
+  const c = VIDEO_COLLECTIONS[v.c];
+  return KIWIX + (paths[c.name] || '/content/' + c.book) + '/index/' + encodeURIComponent(v.s);
+};
+function videoCard(v) {
+  const c = VIDEO_COLLECTIONS[v.c];
+  return `<a class="vid" data-i="${VIDEOS.indexOf(v)}" href="${esc(videoHref(v))}" target="_blank">
+    <div class="vthumb">${v.th ? `<img loading="lazy" src="${esc(v.th)}" alt="">` : icon('film')}${v.d ? `<span>${fmtDur(v.d)}</span>` : ''}</div>
+    <b>${esc(v.t)}</b><small>${esc(c.channel)}${v.y ? ' · ' + v.y : ''}</small></a>`;
+}
+const VIDEO_SKIP = /channel update|patreon|giveaway|livestream|\blive\b|announcement|merch/i;   // not how-to
+const videosFor = (topicId, n = 12) => (window.VIDEOS || []).filter(v => VIDEO_TOPICS[topicId]?.test(v.t) && !VIDEO_SKIP.test(v.t)).slice(0, n);
+// Re-point video links once the Kiwix catalog answers (book paths can differ from file names).
+async function fixVideoLinks(root = document) {
+  const p = await kiwixBookPaths(); if (!Object.keys(p).length) return;
+  root.querySelectorAll('a.vid[data-i]').forEach(a => a.href = videoHref(VIDEOS[a.dataset.i], p));
 }

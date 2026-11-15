@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Watch</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main id="main" style="--c1:#5e5ce6;--c2:#8944d8"></main>
+<script src="data/topics.js"></script>
+<script src="data/videos.js"></script>
+<script src="app.js"></script>
+<script>
+  const main = $('#main');
+  const V = window.VIDEOS || [], C = window.VIDEO_COLLECTIONS || [];
+  const total = V.reduce((s, v) => s + v.d, 0);
+  // Channels: one card per channel (Canadian Prepper has four playlists).
+  const channels = [...new Set(C.map(c => c.channel))];
+
+  main.innerHTML = `
+    <a class="back" href="index.html">${icon('back')}Command Center</a>
+    <div class="top">${icon('film', 'i big')}<h1>How-to videos</h1>
+      <p>${V.length} videos, ${Math.round(total / 3600)} hours, from ${channels.length} preparedness channels. They play in the library (Kiwix), with no internet.</p>
+      <div class="search">${icon('search')}<input id="q" type="search" placeholder="Search ${V.length} videos…" autocomplete="off"></div>
+    </div>
+    <div class="tabs" id="tabs"></div>
+    <div id="out"></div>
+    <p id="kiwix" style="color:var(--mute);font-size:14px;margin-top:28px"></p>`;
+
+  const tabs = [['all', 'Top picks'], ...TOPICS.filter(t => videosFor(t.id, 1).length).map(t => [t.id, t.title]), ...channels.map(ch => ['ch:' + ch, ch])];
+  let tab = params.get('t') || 'all';
+  const renderTabs = () => $('#tabs').innerHTML = tabs.map(([id, n]) => `<button data-t="${esc(id)}" class="${id === tab ? 'on' : ''}">${esc(n)}</button>`).join('');
+  const grid = (title, vs, more) => vs.length ? `<h2 class="sec">${esc(title)}${more ? ` <a href="#" data-t="${esc(more)}">See all</a>` : ''}</h2><div class="vids">${vs.map(videoCard).join('')}</div>` : '';
+
+  function render() {
+    const q = $('#q').value.trim().toLowerCase();
+    let html;
+    if (q) {
+      const words = q.split(/\s+/);
+      const hits = V.filter(v => words.every(w => (v.t + ' ' + C[v.c].channel + ' ' + C[v.c].desc).toLowerCase().includes(w)));
+      html = grid(`${hits.length} result${hits.length === 1 ? '' : 's'}`, hits.slice(0, 120)) || `<p style="color:var(--mute);margin:24px 2px">No videos match. Try the <a style="color:var(--blue)" href="${kiwixSearch(q)}" target="_blank">whole library</a>.</p>`;
+    } else if (tab === 'all') {
+      // Top picks: a handful per topic, then each collection.
+      html = TOPICS.filter(t => videosFor(t.id, 1).length).map(t => grid(t.title, videosFor(t.id, 4), t.id)).join('');
+    } else if (tab.startsWith('ch:')) {
+      const ch = tab.slice(3);
+      html = C.map((c, i) => c.channel === ch ? grid(c.desc.split(':')[0] || c.title, V.filter(v => v.c === i)) : '').join('');
+    } else {
+      const t = TOPICS.find(x => x.id === tab);
+      html = grid(t.title, videosFor(t.id, 400));
+    }
+    $('#out').innerHTML = html;
+    fixVideoLinks($('#out'));
+  }
+  $('#tabs').addEventListener('click', e => { const b = e.target.closest('[data-t]'); if (!b) return; tab = b.dataset.t; $('#q').value = ''; renderTabs(); render(); scrollTo({ top: 0 }); });
+  $('#out').addEventListener('click', e => { const a = e.target.closest('a[data-t]'); if (!a) return; e.preventDefault(); tab = a.dataset.t; renderTabs(); render(); scrollTo({ top: 0 }); });
+  $('#q').addEventListener('input', render);
+  renderTabs(); render();
+
+  checkUp(KIWIX + '/').then(ok => $('#kiwix').innerHTML = ok
+    ? 'Videos open in the library. If one says "not found", stop the Kiwix Hotspot, select all the books (including the six video collections), and start it again.'
+    : `<b style="color:var(--red)">The library is off.</b> Videos need it: open the Kiwix app → Hotspot → select all books → Start.`);
+</script>
+</body>
+</html>
