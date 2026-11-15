@@ -1,0 +1,2 @@
+{ "name": "nomad-near-index", "private": true, "type": "module",
+  "dependencies": { "pmtiles": "4.3.0", "@mapbox/vector-tile": "2.0.4", "pbf": "4.0.1" } }

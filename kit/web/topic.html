@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main id="main"></main>
+<script src="data/docs.js"></script>
+<script src="data/emergencies.js"></script>
+<script src="data/topics.js"></script>
+<script src="app.js"></script>
+<script>
+  const main = $('#main');
+  const t = TOPICS.find(x => x.id === params.get('id')) || TOPICS[0];
+  document.title = t.title;
+  const docs = allDocs().filter(d => (t.docs || []).includes(d.path));
+  const ems = (t.emergencies || []).map(id => EMERGENCIES.find(e => e.id === id)).filter(Boolean);
+
+  main.style.cssText = grad(...t.c);
+  main.innerHTML = `
+    <a class="back" href="index.html">${icon('back')}Command Center</a>
+    <div class="top">
+      ${icon(t.icon, 'i big')}
+      <h1>${esc(t.title)}</h1><p>${esc(t.blurb)}</p>
+      <div class="search">${icon('search')}<input id="q" type="search" placeholder="Search this topic…" autocomplete="off"></div>
+    </div>
+    <div class="chips">${(t.keywords || []).map(k => `<a href="${kiwixSearch(k)}" target="_blank">${esc(k)}</a>`).join('')}</div>
+    ${ems.length ? `<h2 class="sec">Emergency checklists</h2><div class="etiles">${ems.map(e =>
+      `<a class="etile" href="emergency.html?id=${e.id}" style="${grad(...e.c)}">${icon(e.icon)}<b>${esc(e.title)}</b></a>`).join('')}</div>` : ''}
+    <div id="books"></div>
+    ${t.bibles ? `<h2 class="sec">Bibles</h2><div class="cards">${BIBLES.map(([p, n, s]) =>
+      `<a class="card" href="${p}" target="_blank" style="${grad(...t.c)}"><div class="ico">${icon('cross')}</div><div><b>${esc(n)}</b><small>${esc(s)}</small></div></a>`).join('')}</div>` : ''}
+    ${docs.length ? `<h2 class="sec">Docs &amp; manuals <a href="docs.html">${docs.length} files</a></h2><div class="docs" id="docs">${docs.map(d => docCard(d, t.c)).join('')}</div>` : ''}
+    ${(t.links || []).length ? `<h2 class="sec">More</h2><div class="cards">${t.links.map(([n, h]) =>
+      `<a class="card" href="${h}" target="_blank" style="${grad(...t.c)}"><div class="ico">${icon('cap')}</div><div><b>${esc(n)}</b></div></a>`).join('')}</div>` : ''}`;
+
+  // Library books for this topic, linked straight into Kiwix when it's serving.
+  (async () => {
+    if (!(t.books || []).length) return;
+    let entries = [];
+    try {
+      const x = await (await fetch(KIWIX + '/catalog/v2/entries?count=100', { signal: AbortSignal.timeout(2500) })).text();
+      const doc = new DOMParser().parseFromString(x, 'application/xml');
+      entries = [...doc.getElementsByTagName('entry')].map(en => ({
+        name: en.getElementsByTagName('name')[0]?.textContent || '',
+        title: en.getElementsByTagName('title')[0]?.textContent || '',
+        href: [...en.getElementsByTagName('link')].find(l => l.getAttribute('type') === 'text/html')?.getAttribute('href'),
+      }));
+    } catch {}
+    $('#books').innerHTML = `<h2 class="sec">In the library</h2><div class="cards">${t.books.map(([label, prefix]) => {
+      const en = entries.find(e => e.name.startsWith(prefix) || e.href?.includes('/' + prefix));
+      const href = en?.href ? KIWIX + en.href : KIWIX + '/';
+      return `<a class="card vivid" href="${href}" target="_blank" style="${grad(...t.c)}"><div class="ico">${icon('book')}</div>
+        <div><b>${esc(label)}</b><small>${en ? 'Open in the library' : 'Library is off: Kiwix app → Hotspot → Start'}</small></div></a>`;
+    }).join('')}</div>`;
+  })();
+
+  wireSearch($('#q'), { prefix: '', filter: r => r.k !== 'Topic' && (r.k === 'Emergency' ? (t.emergencies || []).some(id => r.href.endsWith('=' + id)) : (t.docs || []).includes(r.href) || (t.bibles && r.k === 'Bible')) });
+</script>
+</body>
+</html>

@@ -4,72 +4,83 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NOMAD Command Center</title>
-<style>
-  :root { --bg:#f4f2ee; --card:#fff; --ink:#1d1d1b; --mute:#6b6a66; --line:#dedbd4; --accent:#b4441c; --ok:#2f7d32; --bad:#b3261e; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#151514; --card:#1f1f1d; --ink:#ecebe7; --mute:#9d9b95; --line:#33322f; --accent:#f08a5d; --ok:#7cc47f; --bad:#f2786f; } }
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.45 -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif; }
-  main { max-width:960px; margin:0 auto; padding:32px 16px 48px; }
-  h1 { font-size:28px; margin:0 0 4px; letter-spacing:-.01em; }
-  .sub { color:var(--mute); margin:0 0 28px; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:14px; }
-  a.card { display:block; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; color:inherit; text-decoration:none; }
-  a.card:hover { border-color:var(--accent); }
-  .card h2 { font-size:18px; margin:0 0 6px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
-  .card p { margin:0; color:var(--mute); font-size:14px; }
-  .dot { font-size:12px; font-weight:600; white-space:nowrap; }
-  .dot.ok { color:var(--ok); } .dot.bad { color:var(--bad); }
-  section { margin-top:32px; }
-  h3 { font-size:15px; text-transform:uppercase; letter-spacing:.06em; color:var(--mute); margin:0 0 10px; }
-  ol { margin:0; padding-left:20px; color:var(--mute); font-size:14px; }
-  code { font:13px ui-monospace, Menlo, monospace; }
-</style>
+<link rel="stylesheet" href="app.css">
 </head>
 <body>
 <main>
-  <h1>NOMAD Command Center</h1>
-  <p class="sub">Offline knowledge kit. Everything here runs from this Mac and the EXTREME PRO drive, with no internet needed.</p>
+  <div class="kicker">Emergency: tap what's happening</div>
+  <div class="etiles" id="etiles"></div>
 
-  <div class="grid">
-    <a class="card" href="http://127.0.0.1/" data-check="http://127.0.0.1/">
-      <h2>Library <span class="dot">…</span></h2>
-      <p>Full Wikipedia with images, medical wiki, post-disaster guides, water, food, knots, iFixit repair guides, Wikivoyage.</p>
-    </a>
-    <a class="card" href="chat.html" data-check="http://127.0.0.1:11434/api/tags">
-      <h2>AI assistant <span class="dot">…</span></h2>
-      <p>Local model on the Mac's GPU through Ollama. Private and offline.</p>
-    </a>
-    <a class="card" href="http://127.0.0.1:8092/" data-check="http://127.0.0.1:8092/">
-      <h2>Education <span class="dot">…</span></h2>
-      <p>Kolibri with Khan Academy (US curriculum): videos and exercises, K–12 and up.</p>
-    </a>
-    <a class="card" href="guides/index.html">
-      <h2>Guides</h2>
-      <p>First aid and survival manuals, BTECH UV-PRO radio and frequency guides, FEMA, Las Vegas heat and flood, San Antonio winter storms.</p>
-    </a>
-    <a class="card" href="map.html" data-check="http://127.0.0.1:8091/us-west/0/0/0.mvt">
-      <h2>Maps <span class="dot">…</span></h2>
-      <p>Street-level offline maps: US West (incl. Las Vegas and Henderson) and greater San Antonio, TX.</p>
-    </a>
+  <div class="brand">
+    <div class="logo" id="logo"></div>
+    <div class="meta"><b id="netstate">OFFLINE</b> · <b>NOMAD</b><br><span id="today"></span></div>
+  </div>
+  <h1>Command Center</h1>
+  <div class="pills" id="pills"></div>
+
+  <div class="search"><span id="sicon"></span><input id="q" type="search" placeholder="Search guides, books, emergencies…" autocomplete="off"></div>
+
+  <div class="heroes">
+    <a class="hero" href="docs.html" style="--c1:#ff5e57;--c2:#c0392b"><div class="badge" data-ic="siren"></div><div><b>Emergency library</b><small>Guides, manuals &amp; books for right now</small></div></a>
+    <a class="hero" href="map.html" style="--c1:#34c759;--c2:#1f8a3b"><div class="badge" data-ic="map"></div><div><b>Maps</b><small>Las Vegas · Henderson · San Antonio</small></div></a>
+    <a class="hero" href="map.html?near=1" style="--c1:#0a84ff;--c2:#0050b3"><div class="badge" data-ic="pin"></div><div><b>Near Home</b><small>ER · fire · police · pharmacy · water</small></div></a>
   </div>
 
-  <section>
-    <h3>If something is down</h3>
-    <ol>
-      <li>Plug in the EXTREME PRO drive and double-click <code>Start NOMAD.command</code> on it.</li>
-      <li>Library: in the Kiwix app, click <b>Hotspot</b> in the sidebar, select all the books, and click Start Hotspot.</li>
-      <li>Education: on first visit, Kolibri asks you to create a facility and admin account.</li>
-    </ol>
-  </section>
+  <h2 class="sec">Our family</h2>
+  <div class="cards" id="family"></div>
+
+  <h2 class="sec">Topics</h2>
+  <div class="cards" id="topics"></div>
+
+  <h2 class="sec">Library &amp; tools</h2>
+  <div class="cards" id="tools"></div>
 </main>
+<script src="data/docs.js"></script>
+<script src="data/emergencies.js"></script>
+<script src="data/topics.js"></script>
+<script src="app.js"></script>
 <script>
-  document.querySelectorAll('[data-check]').forEach(async el => {
-    const dot = el.querySelector('.dot');
-    try {
-      await fetch(el.dataset.check, { mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(3000) });
-      dot.textContent = '● running'; dot.className = 'dot ok';
-    } catch { dot.textContent = '○ not running'; dot.className = 'dot bad'; }
-  });
+  $('#logo').innerHTML = icon('life');
+  $('#sicon').outerHTML = icon('search');
+  document.querySelectorAll('[data-ic]').forEach(el => el.innerHTML = icon(el.dataset.ic));
+  $('#today').textContent = new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+
+  const main = EMERGENCIES.filter(e => !e.more);
+  const extra = EMERGENCIES.filter(e => e.more);
+  $('#etiles').innerHTML = main.map(e =>
+    `<a class="etile" href="emergency.html?id=${e.id}" style="${grad(...e.c)}">${icon(e.icon)}<b>${esc(e.title)}</b></a>`).join('') +
+    `<a class="etile more" href="emergency.html" style="--c1:#3a3a3c;--c2:#1c1c1e">${icon('dots')}<div><b>More emergencies</b><small>${extra.map(e => esc(e.title.replace(/ \/.*/, ''))).join(' · ')}</small></div></a>`;
+
+  const card = (href, ic, c, title, sub, extra = '') =>
+    `<a class="card" href="${href}" style="${grad(...c)}" ${extra}><div class="ico">${icon(ic)}</div><div><b>${esc(title)}</b><small>${esc(sub)}</small></div></a>`;
+  $('#family').innerHTML = FAMILY_PAGES.map(f => card('family.html?id=' + f.id, f.icon, f.c, f.title, f.sub)).join('');
+  $('#topics').innerHTML = TOPICS.map(t => card('topic.html?id=' + t.id, t.icon, t.c, t.title, t.sub)).join('');
+
+  const tools = [
+    [KIWIX + '/', 'book', ['#0a84ff', '#0050b3'], 'All books', 'Wikipedia, MDWiki, iFixit, Wikivoyage…', KIWIX + '/', 'Kiwix app → Hotspot → Start'],
+    ['docs.html', 'folder', ['#40c8e0', '#14839a'], 'Docs', 'PDF manuals & guides'],
+    ['chat.html', 'sparkles', ['#bf5af2', '#7d2ab8'], 'AI assistant', 'Offline chat', OLLAMA + '/api/tags', 'Run Start NOMAD.command'],
+    [KOLIBRI + '/', 'cap', ['#30d158', '#1a8a3a'], 'Education', 'Khan Academy, K–12', KOLIBRI + '/', 'Run Start NOMAD.command'],
+    ['map.html', 'map', ['#34c759', '#1f8a3b'], 'Maps', 'Offline street maps', TILES + '/us-west/0/0/0.mvt', 'Run Start NOMAD.command'],
+    ['tools/cyberchef/index.html', 'flask', ['#8e8e93', '#48484a'], 'CyberChef', 'Decode, convert, hash'],
+  ];
+  $('#tools').innerHTML = tools.map(([href, ic, c, t, s, chk, off]) =>
+    `<a class="card" href="${href}"${href.startsWith('http') ? ' target="_blank"' : ''} style="${grad(...c)}"${chk ? ` data-check="${chk}" data-off="${esc(off)}"` : ''}>
+      <div class="ico">${icon(ic)}</div><div>${chk ? '<span class="status">…</span>' : ''}<b>${t}</b><small>${s}</small></div></a>`).join('');
+  wireStatus();
+
+  // Pills: offline state, library size, docs.
+  (async () => {
+    $('#netstate').textContent = navigator.onLine ? 'ONLINE' : 'OFFLINE';   // no outside request
+    const pills = [`<span class="pill green">${icon('check')}Works with no internet</span>`];
+    let books = 0;
+    try { const x = await (await fetch(KIWIX + '/catalog/v2/entries?count=100', { signal: AbortSignal.timeout(2500) })).text(); books = (x.match(/<entry>/g) || []).length; } catch {}
+    pills.push(books ? `<span class="pill blue">${icon('book')}${books} books</span>` : `<span class="pill red" title="Kiwix app → Hotspot → Start">${icon('book')}Library off</span>`);
+    pills.push(`<span class="pill orange">${icon('doc')}${(window.DOCS || []).length} guides</span>`);
+    pills.push(`<span class="pill blue">${icon('cross')}${BIBLES.length} Bibles</span>`);
+    $('#pills').innerHTML = pills.join('');
+  })();
+  wireSearch($('#q'));
 </script>
 </body>
 </html>

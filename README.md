@@ -32,10 +32,12 @@ Faster, if the NAS backup exists: `scripts/restore-from-nas.sh` copies everythin
 | Step | What | Size | Source |
 |---|---|---|---|
 | `kit` | Launcher, map and chat pages, start script, README, guide index | <1 MB | `kit/` in this repo |
-| `web` | MapLibre, Protomaps basemaps, offline fonts and sprites | 15 MB | jsDelivr, GitHub |
+| `web` | MapLibre, Protomaps basemaps, offline fonts and sprites, CyberChef | 95 MB | jsDelivr, GitHub |
 | `guides` | Army first aid and survival, FEMA, Las Vegas, San Antonio, radio manuals, NIFOG, ARES, FAA airband, 5 Bibles | 250 MB | `manifests/guides.tsv`, `manifests/bibles.txt` |
+| `docs-index` | Page counts and first-page thumbnails for the launcher (`web/data/docs.js`, `web/thumbs/`) | 5 MB | the guides |
 | `installers` | Kiwix, Ollama, Python, Kolibri wheels, pmtiles, Baofeng CPS; writes `SHA256SUMS` | 350 MB | `manifests/installers.tsv` |
 | `maps` | US West (Las Vegas, Henderson) and San Antonio, street level | 3.6 GB | Protomaps build, `manifests/maps.tsv` |
+| `near-index` | Hospitals, fire stations, police, pharmacies, water, groceries, fuel around each city (`web/data/near.js`); needs node | 0.1 MB | the maps |
 | `zim` | Wikipedia (maxi), MDWiki, iFixit, Wikivoyage, 5 zimgit guides; SHA-256 checked | 150 GB | `manifests/zim.txt` |
 | `models` | `qwen3.8:27b-q8_0`, `qwen3.5:9b` | 37 GB | Ollama |
 | `kolibri` | Khan Academy (US) | 61 GB | Kolibri |
@@ -52,6 +54,20 @@ Edit the manifest or `config.sh`, then re-run that step:
 - **FAA Chart Supplements** expire every 56 days: update the date in `manifests/guides.tsv` and
   `kit/guides/index.html`.
 - **Pages:** edit them in `kit/` (not on the drive), then `./build.sh kit`.
+
+## The Command Center (launcher)
+
+`kit/web/` is a static site served on port 8090:
+
+- **Emergency tiles** (`data/emergencies.js`): step-by-step checklists (first minutes, first hour, first day)
+  with tick-off state saved per browser, print, and links to the right guides. Local numbers for Las Vegas /
+  Henderson and San Antonio utilities.
+- **Our family** (`family.html`): Start here, Family Plan, Our House, Kids card. Fill in
+  `web/data/family.js` on the drive (contacts, meeting places, shutoffs, medications). Secrets go in the vault.
+- **Topics** (`data/topics.js`): Water, Food, Medical, Kids, Power, Comms, Home, Security, Repair, Survival,
+  Faith, Reference. Keyword chips search the Kiwix library; docs show with thumbnails.
+- **Search**: instant matches across checklists, topics and docs, plus full-text library search and "ask the AI".
+- **Near Home** (`map.html?near=1`): nearest ER, urgent care, fire, police, pharmacy, water, groceries, fuel.
 
 ## Running it (on the drive)
 

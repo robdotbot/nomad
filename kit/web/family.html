@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Our family</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main id="main"></main>
+<script src="data/docs.js"></script>
+<script src="data/emergencies.js"></script>
+<script src="data/topics.js"></script>
+<script src="data/family.js"></script>
+<script src="app.js"></script>
+<script>
+  const main = $('#main');
+  const page = FAMILY_PAGES.find(x => x.id === params.get('id')) || FAMILY_PAGES[0];
+  const F = window.FAMILY || {};
+  document.title = page.title;
+  const todo = what => `<span class="todo">Add ${esc(what)} in web/data/family.js</span>`;
+  const val = (v, what) => v ? esc(v) : todo(what);
+  const rows = pairs => `<table>${pairs.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${v}</td></tr>`).join('')}</table>`;
+  const panel = (title, body) => `<div class="panel"><h3>${esc(title)}</h3>${body}</div>`;
+
+  const PAGES = {
+    start: () => `
+      ${panel('In an emergency', `<ul>
+        <li>Tap the tile for what's happening at the top of the Command Center. Each one is a checklist in order: first minutes, first hour, first day. Ticks are saved on this computer.</li>
+        <li>Life in danger: call <b>911</b> first. Poison Control: <b>1-800-222-1222</b>.</li>
+        <li>Print the checklists and the Kids card now, and keep them with the go-bags. Paper works when batteries don't.</li></ul>`)}
+      ${panel('What runs where', rows([
+        ['Everything', 'This Mac + the EXTREME PRO drive. No internet needed.'],
+        ['Start it', 'Plug in the drive, double-click <b>Start NOMAD.command</b>.'],
+        ['Library (Wikipedia, medical, iFixit)', 'Kiwix app → <b>Hotspot</b> → select all books → Start. Phones on the same Wi-Fi can read it too.'],
+        ['Maps', 'Offline street maps of Las Vegas, Henderson and San Antonio, with hospitals and fire stations under <a href="map.html?near=1" style="color:var(--blue)">Near Home</a>.'],
+        ['AI assistant', 'Runs on this Mac. Use the 9B model on battery; the 27B gives better answers on power.'],
+        ['Encrypted vault', 'Double-click <b>NOMAD Vault.sparsebundle</b> on the drive for IDs, insurance and medical records.'],
+        ['Backup', 'Every night at 3 a.m. to the NAS (HomelabBackups).'],
+      ]))}
+      ${panel('Fill in your family details', `<p style="margin:0">The Family Plan, Our House and Kids card pages read <b>web/data/family.js</b> on the drive. Add contacts, meeting places, shutoff locations and each person's medications and allergies there (or ask Claude to). Keep passwords and account numbers in the vault, not in that file.</p>`)}`,
+
+    plan: () => `
+      <div class="grid2">
+        ${panel('Who to call', (F.contacts || []).length ? rows(F.contacts.map(c => [c.name, `${esc(c.who || '')}<br><b>${esc(c.phone || '')}</b>${c.note ? `<br><small style="color:var(--mute)">${esc(c.note)}</small>` : ''}`])) : todo('contacts (start with one out-of-area contact everyone texts)'))}
+        ${panel('Where we meet', rows([
+          ['Fire in the house', val(F.meetups?.near, 'a spot right outside')],
+          ['Can\'t get home', val(F.meetups?.neighborhood, 'a neighborhood meeting place')],
+          ['Have to leave the area', val(F.meetups?.outOfTown, 'an out-of-town destination')],
+        ]))}
+        ${panel('Emergency numbers', rows([
+          ['Police · fire · ambulance', '<b>911</b> (text 911 if you can\'t call)'],
+          ['Poison Control', '<b>1-800-222-1222</b>'],
+          ['Power: NV Energy · CPS Energy', '702-402-2900 · 210-353-4357'],
+          ['Gas: Southwest Gas · CPS Energy', '877-860-6020 · 210-353-4357'],
+          ['Water: LVVWD · SAWS', '702-870-4194 · 210-704-7297'],
+          ...((F.doctors || []).map(d => [d.name, esc(d.phone)])),
+        ]))}
+        ${panel('Radio plan', rows([
+          ['Family GMRS / FRS channel', val(F.radio?.gmrs, 'your family channel')],
+          ['Ham', val(F.radio?.ham, 'callsigns and a simplex frequency')],
+          ['NOAA weather', 'WX channels on the Baofeng / BTECH (162.400–162.550 MHz)'],
+          ['National calling (ham)', '146.520 MHz simplex'],
+        ]))}
+        ${panel('Go-bags (one per person)', `<ul>
+          <li>Water (1 gal/person/day for 3 days) and 3 days of food</li><li>Medications (7 days), glasses, copies of prescriptions</li>
+          <li>First-aid kit, tourniquet, N95 masks</li><li>Flashlight or headlamp, batteries, radio, phone chargers, power bank</li>
+          <li>Cash in small bills, copies of IDs and insurance (or this drive's vault)</li><li>Change of clothes, sturdy shoes, blanket</li>
+          <li>Kids: diapers, wipes, formula or snacks, a comfort toy</li><li>Pets: food, leash or carrier, vaccination records</li></ul>`)}
+        ${panel('People', (F.people || []).length ? rows(F.people.map(p => [p.name, [p.role, p.born && 'born ' + p.born, p.meds && 'meds: ' + p.meds, p.allergies && 'allergies: ' + p.allergies].filter(Boolean).map(esc).join(' · ')])) : todo('each person, with medications and allergies'))}
+      </div>`,
+
+    house: () => `
+      <div class="grid2">
+        ${panel('Shutoffs', rows([
+          ['Main water valve', val(F.house?.water, 'where the main water shutoff is')],
+          ['Gas meter (+ wrench)', val(F.house?.gas, 'where the gas meter and wrench are')],
+          ['Breaker panel', val(F.house?.power, 'where the breaker panel is')],
+          ['Water heater', val(F.house?.waterHeater, 'where the water heater is')],
+        ]))}
+        ${panel('Supplies', F.house?.supplies ? esc(F.house.supplies) : todo('where water, food, first aid and go-bags are kept'))}
+        ${panel('How to shut off', `<ul>
+          <li><b>Water:</b> turn the main valve clockwise until it stops. Then turn off the water heater (gas: pilot to OFF; electric: its breaker).</li>
+          <li><b>Gas:</b> only if you smell gas or hear hissing and it's safe. A quarter turn so the tab is crosswise to the pipe. Only the gas company turns it back on.</li>
+          <li><b>Power:</b> switch off the individual breakers first, then the main.</li></ul>`)}
+        ${panel('Check twice a year', `<ul>
+          <li>Smoke and CO alarms (test, replace batteries)</li><li>Fire extinguisher gauge in the green</li>
+          <li>Rotate stored water and food</li><li>Medications in go-bags not expired</li>
+          <li>Charge radios and power banks; run the generator 10 minutes, outside</li></ul>`)}
+      </div>`,
+
+    kids: () => `
+      <div class="grid2">
+        ${panel('Call 911', `<ul>
+          <li>Trouble breathing, blue or gray lips, won't wake up</li><li>Seizure over 5 minutes, or the first one ever</li>
+          <li>Baby under 3 months with a temperature of <b>100.4 °F (38 °C)</b> or higher</li>
+          <li>Swallowed a button battery or magnets (ER now)</li><li>Severe bleeding, or a head injury with vomiting or confusion</li></ul>`)}
+        ${panel('Fever medicine', `<ul>
+          <li><b>Dose by weight</b>, using the chart on the package and the syringe that came with that bottle. Infant and children's liquids come in different strengths.</li>
+          <li><b>Acetaminophen</b> (Tylenol): every 4–6 hours, max 5 doses in 24 hours. Under 12 weeks only if a doctor says so.</li>
+          <li><b>Ibuprofen</b> (Motrin, Advil): from 6 months old, every 6–8 hours, with food.</li>
+          <li><b>Never aspirin</b> for children (Reye's syndrome).</li>
+          <li>Write down each dose and the time.</li></ul>`)}
+        ${panel('CPR', `<ul>
+          <li><b>Child:</b> 1–2 hands, center of chest, about 2 inches deep, 100–120/min. 30 pushes, 2 breaths.</li>
+          <li><b>Infant:</b> 2 fingers just below the nipple line, 1.5 inches deep, 100–120/min. 30 pushes, 2 small puffs over mouth and nose.</li>
+          <li>Alone with no phone: 2 minutes of CPR, then go call 911.</li></ul>`)}
+        ${panel('Choking', `<ul>
+          <li><b>Child over 1:</b> 5 back blows, then 5 abdominal thrusts. Repeat.</li>
+          <li><b>Infant:</b> face down on your forearm, 5 back blows; face up, 5 chest thrusts with 2 fingers. Repeat. No blind finger sweeps.</li>
+          <li>Goes limp: start CPR and call 911.</li></ul>`)}
+        ${panel('Dehydration signs', `<ul><li>No wet diaper in 8 hours (or no pee in 8 hours)</li><li>No tears, dry mouth, sunken soft spot</li><li>Very sleepy or floppy</li></ul><p style="margin:8px 0 0">Small sips of oral rehydration solution every few minutes. Getting worse: get care.</p>`)}
+        ${panel('Our kids', (F.people || []).filter(p => p.born && p.born > new Date().getFullYear() - 18).length
+          ? rows(F.people.filter(p => p.born > new Date().getFullYear() - 18).map(p => [p.name, [p.weight && 'weight: ' + p.weight, p.meds && 'meds: ' + p.meds, p.allergies && 'allergies: ' + p.allergies].filter(Boolean).map(esc).join(' · ') || 'no notes']))
+          : todo('each child with weight, medications and allergies'))}
+      </div>
+      <p style="color:var(--mute);font-size:14px">General guidance from the American Academy of Pediatrics and Red Cross. Follow your pediatrician and the package label. More in the Medical topic and MDWiki.</p>`,
+  };
+
+  main.style.cssText = grad(...page.c);
+  main.innerHTML = `
+    <a class="back" href="index.html">${icon('back')}Command Center</a>
+    <div class="top">${icon(page.icon, 'i big')}<h1>${esc(page.title)}</h1><p>${esc(page.sub)}</p>
+      <div class="btns"><button onclick="print()">Print</button>${FAMILY_PAGES.filter(p => p.id !== page.id).map(p => `<a href="family.html?id=${p.id}">${esc(p.title)}</a>`).join('')}</div></div>
+    <div style="margin-top:16px">${PAGES[page.id]()}</div>`;
+</script>
+</body>
+</html>

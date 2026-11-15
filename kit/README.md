@@ -12,13 +12,13 @@ only runs on x86 Ubuntu). Everything runs from the **EXTREME PRO** SSD. No inter
 
 | Tool | Address | What it is |
 |---|---|---|
-| Launcher | http://127.0.0.1:8090/ | Links and status for everything below |
+| Command Center | http://127.0.0.1:8090/ | Emergency checklists, family plan, topics, search, and status for everything below |
 | Library | http://127.0.0.1/ (or the Kiwix app) | Wikipedia, medical wiki, survival guides, iFixit, Wikivoyage |
 | AI assistant | launcher → AI assistant | Ollama on the Mac's GPU: `qwen3.8:27b` (best answers), `qwen3.5:9b` (on battery) |
 | Education | http://127.0.0.1:8092/ | Kolibri with Khan Academy (US curriculum) |
 | Guides | launcher → Guides (`guides/`) | Army first aid + survival manuals, BTECH UV-PRO manuals, NIFOG/ARES/band chart, FAA airband frequencies, FEMA guide, Las Vegas heat/flood, San Antonio winter |
 | Vault | double-click `NOMAD Vault.sparsebundle` | Encrypted (AES-256) folder for IDs, insurance, medical records. Password: yours only |
-| Maps | launcher → Maps | Street maps: US West incl. Las Vegas/Henderson (`maps/us-west.pmtiles`), greater San Antonio, TX (`maps/san-antonio.pmtiles`) |
+| Maps | launcher → Maps (Near Home: nearest ER, fire, police, pharmacy) | Street maps: US West incl. Las Vegas/Henderson (`maps/us-west.pmtiles`), greater San Antonio, TX (`maps/san-antonio.pmtiles`) |
 
 ## What's where
 

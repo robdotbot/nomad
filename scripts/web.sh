@@ -14,3 +14,13 @@ if [[ ! -d "$NOMAD/web/assets/fonts" ]]; then
   rsync -a "$t"/basemaps-assets-main/ "$NOMAD/web/assets/"
   rm -rf "$t"
 fi
+# CyberChef (GCHQ's offline decode/convert/hash toolkit), as tools/cyberchef/index.html.
+C="$NOMAD/web/tools/cyberchef"
+if [[ ! -f "$C/index.html" ]]; then
+  t=$(mktemp -d)
+  fetch "$CYBERCHEF_ZIP" "$t/cc.zip"
+  mkdir -p "$C" && unzip -q "$t/cc.zip" -d "$C"
+  # Older releases ship CyberChef_vX.html instead of index.html.
+  [[ -f "$C/index.html" ]] || mv "$(ls "$C"/CyberChef_v*.html | head -1)" "$C/index.html"
+  rm -rf "$t"
+fi

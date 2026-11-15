@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emergency library</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main style="--c1:#ff5e57;--c2:#c0392b">
+  <a class="back" href="index.html"><span id="bk"></span>Command Center</a>
+  <div class="top"><span id="ic"></span><h1>Emergency library</h1>
+    <p>Every guide and manual on the drive, plus five Bibles. For full-text search across Wikipedia, MDWiki and iFixit, use the search box.</p>
+    <div class="search"><span id="si"></span><input id="q" type="search" placeholder="Filter docs, or press Enter to search the whole library…" autocomplete="off"></div>
+  </div>
+  <div id="list"></div>
+</main>
+<script src="data/docs.js"></script>
+<script src="app.js"></script>
+<script>
+  $('#bk').innerHTML = icon('back'); $('#ic').innerHTML = icon('siren', 'i big'); $('#si').outerHTML = icon('search');
+  const GROUPS = [
+    ['military', 'Survival and first aid', ['#ff453a', '#b3170f']], ['fema', 'General preparedness', ['#0a84ff', '#0050b3']],
+    ['las-vegas', 'Las Vegas and Henderson', ['#ff9500', '#c93400']], ['san-antonio', 'San Antonio', ['#64d2ff', '#2a7fb8']],
+    ['radio', 'Radio and airband', ['#5e5ce6', '#3634a3']],
+  ];
+  const docs = allDocs();
+  const render = q => {
+    const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+    const match = s => words.every(w => s.toLowerCase().includes(w));
+    $('#list').innerHTML = GROUPS.map(([dir, name, c]) => {
+      const ds = docs.filter(d => d.path.startsWith('guides/' + dir + '/') && match(d.title + ' ' + name));
+      return ds.length ? `<h2 class="sec">${esc(name)}</h2><div class="docs">${ds.map(d => docCard(d, c)).join('')}</div>` : '';
+    }).join('') + (() => {
+      const bs = BIBLES.filter(([, t, s]) => match(t + ' ' + s + ' bible'));
+      return bs.length ? `<h2 class="sec">Bibles</h2><div class="cards">${bs.map(([p, t, s]) =>
+        `<a class="card" href="${p}" target="_blank" style="--c1:#bf5af2;--c2:#7d2ab8"><div class="ico">${icon('cross')}</div><div><b>${esc(t)}</b><small>${esc(s)}</small></div></a>`).join('')}</div>` : '';
+    })() || `<p style="color:var(--mute);margin:24px 2px">No docs match. Press Enter to search the whole library.</p>`;
+  };
+  $('#q').addEventListener('input', e => render(e.target.value));
+  $('#q').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.value.trim()) open(kiwixSearch(e.target.value.trim()), '_blank'); });
+  render('');
+</script>
+</body>
+</html>

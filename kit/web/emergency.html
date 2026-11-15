@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emergency</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<main id="main"></main>
+<script src="data/docs.js"></script>
+<script src="data/emergencies.js"></script>
+<script src="data/topics.js"></script>
+<script src="data/family.js"></script>
+<script src="app.js"></script>
+<script>
+  const main = $('#main');
+  const e = EMERGENCIES.find(x => x.id === params.get('id'));
+
+  if (!e) {
+    // No id: list every emergency.
+    document.title = 'All emergencies';
+    main.innerHTML = `<a class="back" href="index.html">${icon('back')}Command Center</a>
+      <div class="kicker">All emergencies</div>
+      <div class="etiles">${EMERGENCIES.map(x => `<a class="etile" href="emergency.html?id=${x.id}" style="${grad(...x.c)}">${icon(x.icon)}<div><b>${esc(x.title)}</b><small>${esc(x.sub)}</small></div></a>`).join('')}</div>`;
+  } else {
+    document.title = e.title;
+    const key = 'nomad.check.' + e.id;
+    let done = {}; try { done = JSON.parse(localStorage.getItem(key)) || {}; } catch {}
+    const save = () => { try { localStorage.setItem(key, JSON.stringify(done)); } catch {} };
+    const total = e.phases.reduce((n, p) => n + p.items.length, 0);
+    const F = window.FAMILY || {};
+    const topic = TOPICS.find(t => t.id === e.topic);
+    const docs = allDocs().filter(d => topic?.docs?.includes(d.path));
+
+    main.style.cssText = grad(...e.c);
+    main.innerHTML = `
+      <a class="back" href="index.html">${icon('back')}Command Center</a>
+      <div class="top">
+        ${icon(e.icon, 'i big')}
+        <h1>${esc(e.title)}</h1><p>${esc(e.sub)}</p>
+        <div class="progress"><div id="bar"></div></div>
+        <div class="btns">
+          <button id="reset">Reset checklist</button><button onclick="print()">Print</button>
+          <a href="emergency.html">All emergencies</a>
+          ${topic ? `<a href="topic.html?id=${topic.id}">${esc(topic.title)} guides</a>` : ''}
+          <a href="chat.html?q=${encodeURIComponent(e.title.replace('?', '') + ': what should I do?')}">Ask the AI</a>
+        </div>
+        ${F.home || (F.people || []).length ? `<div class="note">${esc([(F.people || []).map(p => p.name).join(', '), F.home].filter(Boolean).join(' · '))}</div>` : ''}
+      </div>
+      ${e.phases.map((p, pi) => `
+        <div class="phase"><i>${pi + 1}</i>${esc(p.name)}</div>
+        ${p.items.map((it, ii) => {
+          const id = pi + '.' + ii;
+          return `<div class="item${it.urgent ? ' urgent' : ''}${done[id] ? ' done' : ''}" data-id="${id}" role="checkbox" aria-checked="${!!done[id]}" tabindex="0">
+            <div class="box"></div><div><b>${esc(it.t)}</b>${it.d ? `<span>${esc(it.d)}</span>` : ''}</div></div>`;
+        }).join('')}`).join('')}
+      ${docs.length ? `<h2 class="sec">Read more</h2><div class="docs">${docs.map(d => docCard(d, e.c)).join('')}</div>` : ''}`;
+
+    const bar = $('#bar');
+    const update = () => { bar.style.width = (Object.values(done).filter(Boolean).length / total * 100) + '%'; };
+    main.querySelectorAll('.item').forEach(el => {
+      const toggle = () => {
+        const on = !done[el.dataset.id]; done[el.dataset.id] = on;
+        el.classList.toggle('done', on); el.setAttribute('aria-checked', on); save(); update();
+      };
+      el.addEventListener('click', toggle);
+      el.addEventListener('keydown', ev => { if (ev.key === ' ' || ev.key === 'Enter') { ev.preventDefault(); toggle(); } });
+    });
+    $('#reset').onclick = () => { done = {}; save(); main.querySelectorAll('.item').forEach(el => el.classList.remove('done')); update(); };
+    update();
+  }
+</script>
+</body>
+</html>

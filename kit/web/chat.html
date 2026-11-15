@@ -32,6 +32,10 @@
   fetch(API + '/api/tags').then(r => r.json()).then(d => {
     for (const m of d.models) sel.add(new Option(m.name, m.name));
     if (!d.models.length) add('note', 'No models installed. Run: ollama pull <model>');
+    // Prefer the light model (fast, fine on battery); arriving with ?q= from a search asks right away.
+    const light = [...sel.options].find(o => /9b/.test(o.value)); if (light) sel.value = light.value;
+    const pre = new URLSearchParams(location.search).get('q');
+    if (pre && sel.value) { q.value = pre; document.getElementById('f').requestSubmit(); }
   }).catch(() => add('note', 'Ollama is not running. Start it with Start NOMAD.command.'));
   function add(cls, text) { const p = document.createElement('p'); p.className = 'm ' + cls; if (cls === 'note') p.className = 'note'; p.textContent = text; log.appendChild(p); log.scrollTop = log.scrollHeight; return p; }
   q.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); document.getElementById('f').requestSubmit(); } });
