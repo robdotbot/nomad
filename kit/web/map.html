@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Offline Map</title>
+<link rel="stylesheet" href="lib/maplibre-gl.css">
+<style>
+  html, body, #map { margin:0; height:100%; background:#e9e6df; }
+  .back { position:absolute; top:10px; left:10px; z-index:2; background:#fff; padding:6px 10px; border-radius:6px; font:14px -apple-system, sans-serif; color:#1d1d1b; text-decoration:none; box-shadow:0 1px 4px rgba(0,0,0,.25); }
+  #places { position:absolute; top:10px; left:50%; transform:translateX(-50%); z-index:2; display:flex; gap:6px; flex-wrap:wrap; justify-content:center; max-width:calc(100% - 220px); }
+  #places button { background:#fff; color:#1d1d1b; border:0; padding:6px 10px; border-radius:6px; font:14px -apple-system, sans-serif; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,.25); }
+  @media (max-width: 600px) { #places { top:46px; left:10px; transform:none; max-width:calc(100% - 60px); justify-content:flex-start; } }
+</style>
+</head>
+<body>
+<a class="back" href="index.html">← Command Center</a>
+<div id="places"></div>
+<div id="map"></div>
+<script src="lib/maplibre-gl.js"></script>
+<script src="lib/basemaps.js"></script>
+<script>
+  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const flavor = dark ? 'dark' : 'light';
+  const base = location.origin + location.pathname.replace(/[^/]*$/, '');
+  // One map file per region in maps/ (served by pmtiles on :8091). Regions don't overlap, so each
+  // gets its own copy of the basemap layers; only the first keeps the background layer.
+  const REGIONS = ['us-west', 'san-antonio'];
+  const sources = {}, layers = [];
+  REGIONS.forEach((r, i) => {
+    sources[r] = {
+      type: 'vector', maxzoom: 15,
+      tiles: ['http://127.0.0.1:8091/' + r + '/{z}/{x}/{y}.mvt'],
+      attribution: '© OpenStreetMap contributors, Protomaps'
+    };
+    for (const l of basemaps.layers(r, basemaps.namedFlavor(flavor), { lang: 'en' })) {
+      if (l.type === 'background' && i > 0) continue;
+      layers.push({ ...l, id: r + ':' + l.id });
+    }
+  });
+  const map = new maplibregl.Map({
+    container: 'map',
+    center: [-110, 36], zoom: 4, maxZoom: 18, hash: true,
+    style: {
+      version: 8,
+      glyphs: base + 'assets/fonts/{fontstack}/{range}.pbf',
+      sprite: base + 'assets/sprites/v4/' + flavor,
+      sources, layers
+    }
+  });
+  const PLACES = { 'Las Vegas': [-115.14, 36.17, 12], 'Henderson': [-114.98, 36.04, 13], 'San Antonio': [-98.49, 29.42, 12] };
+  const bar = document.getElementById('places');
+  for (const [name, [lon, lat, z]] of Object.entries(PLACES)) {
+    const b = document.createElement('button'); b.textContent = name;
+    b.onclick = () => map.jumpTo({ center: [lon, lat], zoom: z });
+    bar.appendChild(b);
+  }
+  map.addControl(new maplibregl.NavigationControl());
+  map.addControl(new maplibregl.ScaleControl({ unit: 'imperial' }));
+</script>
+</body>
+</html>

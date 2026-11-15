@@ -1,0 +1,6 @@
+# eBible.org public-domain translations (https://ebible.org/Scriptures/<id>_html.zip)
+eng-kjv2006
+eng-web
+eng-asv
+engDRA
+eng-Brenton

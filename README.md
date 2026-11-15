@@ -1,0 +1,71 @@
+# NOMAD offline kit: build scripts
+
+Rebuilds the NOMAD offline disaster kit (Kiwix library, local AI, Khan Academy, offline maps,
+emergency guides, Bibles, offline installers) onto a drive, on an Apple Silicon Mac.
+Modelled on Project N.O.M.A.D., which only runs on x86 Ubuntu.
+
+The content itself (~300 GB) isn't in git. The scripts download it, or restore it from the NAS.
+
+## Build a new kit
+
+1. Format the drive APFS and name it `EXTREME PRO` (or set `NOMAD` in `config.local.sh`).
+2. Install the apps (online, once per Mac):
+   ```
+   scripts/setup-mac.sh
+   ```
+3. Build. Re-running skips finished files, so it's safe to stop and resume.
+   ```
+   ./build.sh                    # everything
+   ./build.sh kit web guides     # just some steps
+   ```
+4. Download CHIRP by hand (it sits behind a Cloudflare check) from
+   https://archive.chirpmyradio.com/chirp_next/ into `installers/radio/`, then `./build.sh installers`
+   again to refresh `SHA256SUMS`.
+5. Optional: `scripts/vault.sh` (encrypted folder), `scripts/install-backup.sh` (nightly NAS backup).
+6. On the drive, double-click `Start NOMAD.command`.
+
+Faster, if the NAS backup exists: `scripts/restore-from-nas.sh` copies everything back from
+`HomelabBackups` (the vault and Kolibri databases included).
+
+## Steps
+
+| Step | What | Size | Source |
+|---|---|---|---|
+| `kit` | Launcher, map and chat pages, start script, README, guide index | <1 MB | `kit/` in this repo |
+| `web` | MapLibre, Protomaps basemaps, offline fonts and sprites | 15 MB | jsDelivr, GitHub |
+| `guides` | Army first aid and survival, FEMA, Las Vegas, San Antonio, radio manuals, NIFOG, ARES, FAA airband, 5 Bibles | 250 MB | `manifests/guides.tsv`, `manifests/bibles.txt` |
+| `installers` | Kiwix, Ollama, Python, Kolibri wheels, pmtiles, Baofeng CPS; writes `SHA256SUMS` | 350 MB | `manifests/installers.tsv` |
+| `maps` | US West (Las Vegas, Henderson) and San Antonio, street level | 3.6 GB | Protomaps build, `manifests/maps.tsv` |
+| `zim` | Wikipedia (maxi), MDWiki, iFixit, Wikivoyage, 5 zimgit guides; SHA-256 checked | 150 GB | `manifests/zim.txt` |
+| `models` | `qwen3.8:27b-q8_0`, `qwen3.5:9b` | 37 GB | Ollama |
+| `kolibri` | Khan Academy (US) | 61 GB | Kolibri |
+| `vault` (manual) | AES-256 encrypted sparse bundle | — | — |
+
+## Updating content
+
+Edit the manifest or `config.sh`, then re-run that step:
+
+- **ZIMs:** change the dated filename in `manifests/zim.txt` (see https://download.kiwix.org/zim/), and
+  delete the old file from the drive.
+- **Maps:** change `MAP_BUILD` in `config.sh`, delete `maps/*.pmtiles`, run `./build.sh maps`. A new
+  region needs a line in `manifests/maps.tsv` and its name in `REGIONS` in `kit/web/map.html`.
+- **FAA Chart Supplements** expire every 56 days: update the date in `manifests/guides.tsv` and
+  `kit/guides/index.html`.
+- **Pages:** edit them in `kit/` (not on the drive), then `./build.sh kit`.
+
+## Running it (on the drive)
+
+| Tool | Address |
+|---|---|
+| Launcher | http://127.0.0.1:8090/ |
+| Library | http://127.0.0.1/ (Kiwix app → Hotspot, select all books, Start; always port 80) |
+| AI | Ollama, port 11434 |
+| Education | Kolibri, http://127.0.0.1:8092/ |
+| Maps | pmtiles serve, port 8091 |
+
+## Nightly backup
+
+`backup/` holds the 03:00 launchd job that copies the drive and `~/.ollama/models` to the NAS
+(`HomelabBackups/nomad/` and `kiwix/`). It runs through a tiny signed app so macOS can grant it
+Full Disk Access. `scripts/install-backup.sh` builds and loads it. NAS address and account are at
+the top of `backup/nomad-backup.sh`.

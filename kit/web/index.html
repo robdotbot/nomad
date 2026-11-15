@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NOMAD Command Center</title>
+<style>
+  :root { --bg:#f4f2ee; --card:#fff; --ink:#1d1d1b; --mute:#6b6a66; --line:#dedbd4; --accent:#b4441c; --ok:#2f7d32; --bad:#b3261e; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#151514; --card:#1f1f1d; --ink:#ecebe7; --mute:#9d9b95; --line:#33322f; --accent:#f08a5d; --ok:#7cc47f; --bad:#f2786f; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.45 -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif; }
+  main { max-width:960px; margin:0 auto; padding:32px 16px 48px; }
+  h1 { font-size:28px; margin:0 0 4px; letter-spacing:-.01em; }
+  .sub { color:var(--mute); margin:0 0 28px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:14px; }
+  a.card { display:block; background:var(--card); border:1px solid var(--line); border-radius:12px; padding:18px; color:inherit; text-decoration:none; }
+  a.card:hover { border-color:var(--accent); }
+  .card h2 { font-size:18px; margin:0 0 6px; display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .card p { margin:0; color:var(--mute); font-size:14px; }
+  .dot { font-size:12px; font-weight:600; white-space:nowrap; }
+  .dot.ok { color:var(--ok); } .dot.bad { color:var(--bad); }
+  section { margin-top:32px; }
+  h3 { font-size:15px; text-transform:uppercase; letter-spacing:.06em; color:var(--mute); margin:0 0 10px; }
+  ol { margin:0; padding-left:20px; color:var(--mute); font-size:14px; }
+  code { font:13px ui-monospace, Menlo, monospace; }
+</style>
+</head>
+<body>
+<main>
+  <h1>NOMAD Command Center</h1>
+  <p class="sub">Offline knowledge kit. Everything here runs from this Mac and the EXTREME PRO drive, with no internet needed.</p>
+
+  <div class="grid">
+    <a class="card" href="http://127.0.0.1/" data-check="http://127.0.0.1/">
+      <h2>Library <span class="dot">…</span></h2>
+      <p>Full Wikipedia with images, medical wiki, post-disaster guides, water, food, knots, iFixit repair guides, Wikivoyage.</p>
+    </a>
+    <a class="card" href="chat.html" data-check="http://127.0.0.1:11434/api/tags">
+      <h2>AI assistant <span class="dot">…</span></h2>
+      <p>Local model on the Mac's GPU through Ollama. Private and offline.</p>
+    </a>
+    <a class="card" href="http://127.0.0.1:8092/" data-check="http://127.0.0.1:8092/">
+      <h2>Education <span class="dot">…</span></h2>
+      <p>Kolibri with Khan Academy (US curriculum): videos and exercises, K–12 and up.</p>
+    </a>
+    <a class="card" href="guides/index.html">
+      <h2>Guides</h2>
+      <p>First aid and survival manuals, BTECH UV-PRO radio and frequency guides, FEMA, Las Vegas heat and flood, San Antonio winter storms.</p>
+    </a>
+    <a class="card" href="map.html" data-check="http://127.0.0.1:8091/us-west/0/0/0.mvt">
+      <h2>Maps <span class="dot">…</span></h2>
+      <p>Street-level offline maps: US West (incl. Las Vegas and Henderson) and greater San Antonio, TX.</p>
+    </a>
+  </div>
+
+  <section>
+    <h3>If something is down</h3>
+    <ol>
+      <li>Plug in the EXTREME PRO drive and double-click <code>Start NOMAD.command</code> on it.</li>
+      <li>Library: in the Kiwix app, click <b>Hotspot</b> in the sidebar, select all the books, and click Start Hotspot.</li>
+      <li>Education: on first visit, Kolibri asks you to create a facility and admin account.</li>
+    </ol>
+  </section>
+</main>
+<script>
+  document.querySelectorAll('[data-check]').forEach(async el => {
+    const dot = el.querySelector('.dot');
+    try {
+      await fetch(el.dataset.check, { mode: 'no-cors', cache: 'no-store', signal: AbortSignal.timeout(3000) });
+      dot.textContent = '● running'; dot.className = 'dot ok';
+    } catch { dot.textContent = '○ not running'; dot.className = 'dot bad'; }
+  });
+</script>
+</body>
+</html>

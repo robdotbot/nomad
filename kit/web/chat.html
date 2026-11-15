@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Offline AI Assistant</title>
+<style>
+  :root { --bg:#f4f2ee; --card:#fff; --ink:#1d1d1b; --mute:#6b6a66; --line:#dedbd4; --accent:#b4441c; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#151514; --card:#1f1f1d; --ink:#ecebe7; --mute:#9d9b95; --line:#33322f; --accent:#f08a5d; } }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 -apple-system, sans-serif; display:flex; flex-direction:column; height:100vh; }
+  header { padding:10px 16px; border-bottom:1px solid var(--line); display:flex; gap:12px; align-items:center; }
+  header a { color:var(--accent); text-decoration:none; }
+  select { margin-left:auto; font:inherit; background:var(--card); color:var(--ink); border:1px solid var(--line); border-radius:6px; padding:4px; }
+  #log { flex:1; overflow:auto; padding:16px; max-width:820px; width:100%; margin:0 auto; }
+  .m { white-space:pre-wrap; margin:0 0 14px; padding:10px 14px; border-radius:10px; background:var(--card); border:1px solid var(--line); }
+  .m.user { border-color:var(--accent); }
+  .note { color:var(--mute); font-size:13px; }
+  form { display:flex; gap:8px; padding:12px 16px; border-top:1px solid var(--line); max-width:820px; width:100%; margin:0 auto; }
+  textarea { flex:1; font:inherit; padding:8px 10px; border-radius:8px; border:1px solid var(--line); background:var(--card); color:var(--ink); resize:none; height:64px; }
+  button { font:inherit; padding:0 18px; border-radius:8px; border:0; background:var(--accent); color:#fff; cursor:pointer; }
+</style>
+</head>
+<body>
+<header><a href="index.html">← Command Center</a><b>AI assistant</b><select id="model"></select></header>
+<div id="log"><p class="note">Runs entirely on this Mac. It can be wrong: for medical or safety questions, confirm in the Library (medical wiki, post-disaster guides).</p></div>
+<form id="f"><textarea id="q" placeholder="Ask anything… (Enter to send, Shift+Enter for a new line)"></textarea><button>Send</button></form>
+<script>
+  const API = 'http://127.0.0.1:11434';
+  const log = document.getElementById('log'), q = document.getElementById('q'), sel = document.getElementById('model');
+  const msgs = [{ role: 'system', content: 'You are an offline assistant on an emergency preparedness computer. Be practical, concise and safety-conscious. Say when something needs a professional or when you are unsure.' }];
+  fetch(API + '/api/tags').then(r => r.json()).then(d => {
+    for (const m of d.models) sel.add(new Option(m.name, m.name));
+    if (!d.models.length) add('note', 'No models installed. Run: ollama pull <model>');
+  }).catch(() => add('note', 'Ollama is not running. Start it with Start NOMAD.command.'));
+  function add(cls, text) { const p = document.createElement('p'); p.className = 'm ' + cls; if (cls === 'note') p.className = 'note'; p.textContent = text; log.appendChild(p); log.scrollTop = log.scrollHeight; return p; }
+  q.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); document.getElementById('f').requestSubmit(); } });
+  document.getElementById('f').onsubmit = async e => {
+    e.preventDefault();
+    const text = q.value.trim(); if (!text || !sel.value) return;
+    q.value = ''; add('user', text); msgs.push({ role: 'user', content: text });
+    const out = add('bot', '…'); let acc = '';
+    try {
+      const r = await fetch(API + '/api/chat', { method: 'POST', body: JSON.stringify({ model: sel.value, messages: msgs, stream: true, think: false }) });
+      const rd = r.body.getReader(), dec = new TextDecoder(); let buf = '';
+      for (;;) {
+        const { done, value } = await rd.read(); if (done) break;
+        buf += dec.decode(value, { stream: true });
+        const lines = buf.split('\n'); buf = lines.pop();
+        for (const l of lines) if (l.trim()) { const j = JSON.parse(l); if (j.message?.content) { acc += j.message.content; out.textContent = acc; log.scrollTop = log.scrollHeight; } }
+      }
+      msgs.push({ role: 'assistant', content: acc });
+    } catch (err) { out.textContent = 'Error: ' + err.message; }
+  };
+</script>
+</body>
+</html>

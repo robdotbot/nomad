@@ -1,0 +1,8 @@
+# path under installers/	source URL
+kiwix-macos_3.18.0.dmg	https://download.kiwix.org/release/kiwix-macos/kiwix-macos_3.18.0.dmg
+Ollama.dmg	https://ollama.com/download/Ollama.dmg
+python-3.13.17-macos11.pkg	https://www.python.org/ftp/python/3.13.17/python-3.13.17-macos11.pkg
+go-pmtiles-1.31.2_Darwin_arm64.zip	https://github.com/protomaps/go-pmtiles/releases/download/v1.31.2/go-pmtiles-1.31.2_Darwin_arm64.zip
+radio/Baofeng_UV_5R_Mini_CPS_V1.0.7.zip	https://baofeng.s3.amazonaws.com/Baofeng_UV_5R_Mini_CPS_V1.0.7.zip
+# CHIRP sits behind a Cloudflare check: download it by hand from https://archive.chirpmyradio.com/chirp_next/
+# into installers/radio/ (the x86_64 .app.zip; needs Rosetta on Apple Silicon).
