@@ -121,7 +121,7 @@
   main.innerHTML = `
     <a class="back" href="index.html">${icon('back')}Command Center</a>
     <div class="top">${icon(page.icon, 'i big')}<h1>${esc(page.title)}</h1><p>${esc(page.sub)}</p>
-      <div class="btns"><button onclick="print()">Print</button>${FAMILY_PAGES.filter(p => p.id !== page.id).map(p => `<a href="family.html?id=${p.id}">${esc(p.title)}</a>`).join('')}</div></div>
+      <div class="btns"><button onclick="print()">Print</button>${FAMILY_PAGES.filter(p => p.id !== page.id).map(p => `<a href="${p.href || 'family.html?id=' + p.id}">${esc(p.title)}</a>`).join('')}</div></div>
     <div style="margin-top:16px">${PAGES[page.id]()}</div>`;
 </script>
 </body>

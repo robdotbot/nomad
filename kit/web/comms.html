@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Family Comms Plan</title>
+<style>
+  /* Poster style: light paper, hairline cards, one black card per slide, tiny tracked labels. Prints clean. */
+  :root {
+    --paper: #efefed; --card: #fff; --ink: #111; --mute: #6b6b6b; --line: #1a1a1a; --hair: #d9d9d6;
+    --tag: #e3efe3; --tagink: #2f6b3a; --warn: #fbe9e7; --warnink: #a3321f;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+    font: 15px/1.45 "Inter", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  a { color: inherit; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 16px 16px 60px; }
+  .back { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: var(--mute); text-decoration: none; margin: 4px 0 14px; }
+  .back:hover { color: var(--ink); }
+  .toc { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 18px; }
+  .toc a { font-size: 12px; text-decoration: none; border: 1px solid var(--line); border-radius: 99px; padding: 4px 10px; background: var(--card); }
+  .toc a:hover { background: var(--ink); color: #fff; }
+
+  .slide { background: var(--paper); border: 1px solid var(--hair); border-radius: 4px; padding: 26px 24px 18px; margin: 0 0 22px; break-inside: avoid; }
+  .label { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--mute); margin: 0 0 6px; font-weight: 500; }
+  h1 { font-size: clamp(30px, 7vw, 46px); line-height: 1.02; letter-spacing: -.025em; margin: 0 0 14px; font-weight: 700; }
+  h1.two { font-size: clamp(24px, 5.4vw, 34px); }
+  h2 { font-size: 20px; letter-spacing: -.01em; margin: 0; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  h3 { font-size: 15px; margin: 0; font-weight: 600; display: flex; align-items: center; gap: 7px; }
+  .cons { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 22px; }
+  .cons .label { margin: 0 4px 0 0; font-size: 9px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); border-radius: 99px; padding: 4px 11px; font-size: 12px; background: var(--card); white-space: nowrap; }
+  .pill svg { width: 13px; height: 13px; }
+  .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .pill.sm { font-size: 11px; padding: 2px 9px; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; }
+  .card.black { background: #0b0b0b; color: #fff; border-color: #0b0b0b; }
+  .card.black .label, .card.black small, .card.black .mute { color: #a9a9a9; }
+  .card.black .pill { background: transparent; border-color: #fff; color: #fff; }
+  .card.dash { border-style: dashed; }
+  .tag { display: inline-block; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; background: var(--tag); color: var(--tagink); border-radius: 99px; padding: 3px 9px; font-weight: 600; }
+  .card.black .tag { background: #24452b; color: #bfe6c6; }
+  .tag.warn { background: var(--warn); color: var(--warnink); }
+
+  /* Phases */
+  .phase { display: grid; grid-template-columns: 120px 1fr; gap: 16px; }
+  .phase .num { font-size: 38px; font-weight: 700; letter-spacing: -.03em; line-height: 1; margin: 2px 0 8px; }
+  .phase .name { font-size: 16px; font-weight: 700; line-height: 1.15; margin-bottom: 10px; }
+  .items { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; align-content: start; }
+  .it { display: grid; grid-template-columns: 22px 1fr; gap: 8px; align-items: start; }
+  .it svg { width: 18px; height: 18px; margin-top: 1px; }
+  .it b { display: block; font-size: 13px; font-weight: 600; }
+  .it small { display: block; font-size: 11px; color: var(--mute); line-height: 1.35; }
+  .reach { grid-column: 1 / -1; border-top: 1px solid var(--hair); padding-top: 10px; font-size: 12px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .reach .label { margin: 0 6px 0 0; font-size: 9px; }
+  .mini { grid-column: 1 / -1; border-top: 1px dashed var(--hair); padding-top: 10px; font-size: 12.5px; }
+  .card.black .mini, .card.black .reach { border-color: #333; }
+  .mini b { font-weight: 700; }
+  .arrow { display: block; width: 18px; height: 22px; margin: 4px 0 4px 34px; }
+
+  /* Layers */
+  .group-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; margin-bottom: 14px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .sub { font-size: 9px; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); margin: 16px 0 8px; display: flex; gap: 8px; align-items: center; }
+  .card small { color: var(--mute); font-size: 11.5px; display: block; margin-top: 3px; }
+  .ticks { list-style: none; padding: 0; margin: 10px 0 0; font-size: 12.5px; }
+  .ticks li { display: flex; gap: 6px; align-items: baseline; margin: 3px 0; }
+  .ticks li::before { content: "✓"; font-weight: 700; }
+  .ticks.x li::before { content: "✕"; color: var(--warnink); }
+  .freq { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; font-weight: 600; }
+
+  /* PACE */
+  .pace { display: grid; gap: 10px; }
+  .pace .card { display: grid; grid-template-columns: 44px 1fr auto; gap: 14px; align-items: center; }
+  .pace .letter { font-size: 30px; font-weight: 700; letter-spacing: -.03em; line-height: 1; }
+  .pace .what b { font-size: 15px; }
+  .pace .ch { text-align: right; font-size: 13px; }
+  .fill { color: var(--warnink); font-size: 11px; }
+
+  /* Steps */
+  .steps { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .step ol { margin: 10px 0 0; padding-left: 20px; font-size: 13px; }
+  .step li { margin: 4px 0; }
+  .step .n { font-size: 11px; font-weight: 700; border: 1px solid currentColor; border-radius: 99px; width: 22px; height: 22px; display: inline-grid; place-items: center; flex: none; }
+  kbd { font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; border: 1px solid #999; border-bottom-width: 2px; border-radius: 4px; padding: 2px 5px; background: #fafafa; color: #111; white-space: nowrap; }
+  .card.black kbd { background: #222; color: #fff; border-color: #666; }
+
+  /* Tables */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .tbl th { text-align: left; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  .tbl td { padding: 6px 8px; border-bottom: 1px solid var(--hair); vertical-align: top; }
+  .tbl tr:last-child td { border-bottom: 0; }
+  .scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .ok { color: var(--tagink); font-weight: 600; } .no { color: var(--warnink); font-weight: 600; }
+
+  .script { font-size: 13.5px; border-left: 3px solid var(--line); padding: 2px 0 2px 12px; margin: 10px 0; }
+  .script i { color: var(--mute); font-style: normal; font-size: 12px; display: block; }
+  .abc { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 2px 10px; font-size: 12px; margin-top: 10px; }
+  .abc b { display: inline-block; width: 14px; }
+
+  .note { font-size: 12.5px; color: var(--mute); margin: 12px 0 0; }
+  .btn { display: inline-flex; gap: 6px; align-items: center; background: var(--ink); color: #fff; text-decoration: none; border-radius: 99px; padding: 7px 14px; font-size: 13px; border: 0; cursor: pointer; font: inherit; font-size: 13px; }
+  .btn.ghost { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
+  .foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; border-top: 1.5px solid var(--line); margin-top: 22px; padding-top: 10px; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
+  .foot b { font-size: 10px; display: inline-flex; gap: 6px; align-items: center; }
+  .foot svg { width: 13px; height: 13px; }
+  .stack { display: grid; gap: 12px; }
+  svg { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+
+  @media (max-width: 620px) {
+    .slide { padding: 20px 14px 14px; }
+    .phase { grid-template-columns: 1fr; gap: 6px; }
+    .phase .num { font-size: 32px; }
+    .items, .row2, .steps { grid-template-columns: 1fr; }
+    .row3 { grid-template-columns: 1fr; }
+    .pace .card { grid-template-columns: 34px 1fr; }
+    .pace .ch { grid-column: 2; text-align: left; }
+  }
+  @media print {
+    body { background: #fff; font-size: 12px; }
+    .wrap { max-width: none; padding: 0; }
+    .back, .toc, .noprint { display: none !important; }
+    .slide { border: 0; padding: 0 0 10px; page-break-after: always; background: #fff; }
+    .card.black { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .tag { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script src="data/family.js"></script>
+<script>
+// Line icons (24px grid).
+const I = {
+  radio: '<rect x="3" y="8" width="18" height="12" rx="2"/><path d="M7 8 17 3M7 14h4M15 14h.01M15 17h.01"/>',
+  walkie: '<rect x="7" y="7" width="10" height="15" rx="2"/><path d="M10 7V2M10 12h4M10 15h4"/>',
+  walkieTalk: '<rect x="7" y="7" width="10" height="15" rx="2"/><path d="M10 7V2M10 12h4M10 15h4M4 9a5 5 0 0 0 0 6M20 9a5 5 0 0 1 0 6"/>',
+  mesh: '<circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M7 6h10M6 8l5 8M18 8l-5 8"/>',
+  cb: '<rect x="2" y="9" width="20" height="9" rx="2"/><path d="M6 13h5M15 13h3M14 9l4-5"/>',
+  sdr: '<rect x="3" y="5" width="18" height="11" rx="1.5"/><path d="M2 20h20M7 12l2-3 2 2 2-4 2 5 2-2"/>',
+  hf: '<rect x="2" y="8" width="20" height="10" rx="2"/><circle cx="16" cy="13" r="2.5"/><path d="M5 12h6M5 15h4M6 8l3-5"/>',
+  tower: '<path d="M12 9v13M8 22l4-13 4 13M9.5 16h5"/><path d="M8.5 5.5a5 5 0 0 1 7 0M6 3a8.5 8.5 0 0 1 12 0"/><circle cx="12" cy="9" r="1"/>',
+  users: '<circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17" cy="9" r="2.5"/><path d="M16 14a5 5 0 0 1 6 5"/>',
+  home: '<path d="M3 11 12 4l9 7M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',
+  money: '<circle cx="12" cy="12" r="9"/><path d="M15 9.5c0-1.4-1.3-2.2-3-2.2s-3 .8-3 2.2c0 3 6 1.6 6 4.6 0 1.4-1.3 2.4-3 2.4s-3-1-3-2.4M12 5.5v13"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  wave: '<path d="M2 12c2-4 4-4 6 0s4 4 6 0 4-4 6 0"/>',
+  down: '<path d="M9 2v17M3 13l6 6 6-6"/>',
+  cloud: '<path d="M7 18h10a4 4 0 0 0 .5-8 6 6 0 0 0-11.4 1.5A3.3 3.3 0 0 0 7 18z"/><path d="M8 21l1-2M12 21l1-2M16 21l1-2"/>',
+  key: '<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M7 14h10"/>',
+  plane: '<path d="M2 15l8-3V5a2 2 0 1 1 4 0v7l8 3v2l-8-2v4l3 2v1l-5-1-5 1v-1l3-2v-4l-8 2z"/>',
+  bolt: '<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+  ear: '<path d="M6 9a6 6 0 1 1 12 0c0 4-4 5-4 9a3 3 0 0 1-6 0"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0"/>',
+  doc: '<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h8M9 17h8"/>',
+  check: '<path d="M4 12l5 5L20 6"/>',
+  back: '<path d="M15 18l-6-6 6-6"/>',
+  print: '<path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z"/>',
+  dl: '<path d="M12 3v12M7 10l5 5 5-5M4 20h16"/>',
+  logo: '<circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/>',
+};
+const ic = (n, s = '') => `<svg viewBox="0 0 24 24" ${s}>${I[n] || ''}</svg>`;
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const R = (window.FAMILY && FAMILY.radio) || {};
+const fill = (v, dflt, what) => v ? `<span class="freq">${esc(v)}</span>` : `<span class="freq">${dflt}</span><br><span class="fill">suggested · set yours in Family Plan (${what})</span>`;
+
+const foot = (left = 'NOMAD Command Center') => `<div class="foot"><b>${ic('logo')}${left}</b><span>Hear first. Talk second.</span><span>UV-5R Mini</span></div>`;
+const item = (icn, t, s) => `<div class="it">${ic(icn)}<div><b>${t}</b><small>${s}</small></div></div>`;
+
+const FRS = [['1','462.5625'],['2','462.5875'],['3','462.6125'],['4','462.6375'],['5','462.6625'],['6','462.6875'],['7','462.7125'],
+  ['8','467.5625'],['9','467.5875'],['10','467.6125'],['11','467.6375'],['12','467.6625'],['13','467.6875'],['14','467.7125'],
+  ['15','462.5500'],['16','462.5750'],['17','462.6000'],['18','462.6250'],['19','462.6500'],['20','462.6750'],['21','462.7000'],['22','462.7250']];
+
+document.getElementById('app').innerHTML = `
+<a class="back" href="index.html">${ic('back', 'width="14" height="14"')}Command Center</a>
+<nav class="toc noprint">
+  <a href="#priorities">Priorities</a><a href="#layers">Layers</a><a href="#plan">Our plan</a><a href="#radio">Know the Mini</a>
+  <a href="#howto">How-to</a><a href="#program">Program it</a><a href="#talk">On the air</a><a href="#kit">Kit &amp; upgrades</a>
+  <button class="btn ghost" style="padding:3px 10px;font-size:12px" onclick="print()">${ic('print', 'width="13" height="13"')}Print</button>
+</nav>
+
+<!-- 1 · PRIORITIES -->
+<section class="slide" id="priorities">
+  <p class="label">Family comms plan · Build in phases</p>
+  <h1>Communication<br>Priorities</h1>
+  <div class="cons"><span class="label">Constraints</span>
+    <span class="pill">${ic('money')}Limited money</span><span class="pill">${ic('clock')}Limited time</span><span class="pill">${ic('walkie')}One UV-5R Mini</span></div>
+
+  <div class="card phase">
+    <div><p class="label">Phase</p><div class="num">01</div><div class="name">Family</div><span class="tag">Local</span></div>
+    <div class="items">
+      ${item('radio', 'AM / FM radio', 'Broadcast news and alerts. KNPR 88.9 FM (Las Vegas), WOAI 1200 AM (San Antonio).')}
+      ${item('walkie', 'FRS', 'Walmart pack, no license. The kids\' radios. 0.5–2 W, about 1 mile in town.')}
+      ${item('mesh', 'Meshtastic / MeshCore', 'SenseCAP T1000. Off-grid texts and GPS between phones, no license.')}
+      ${item('cb', '+ CB', 'Local add-on. Truckers and neighbors, channel 9 for emergencies.')}
+      <div class="mini"><b>With your Mini:</b> <b>listen</b> to the family on FRS 1–22 and to NOAA weather (hold <kbd>0</kbd>). It can't <i>legally</i> talk on FRS. Keep a pair of FRS radios for that.</div>
+    </div>
+  </div>
+  ${ic('down', 'class="arrow"')}
+  <div class="card phase">
+    <div><p class="label">Phase</p><div class="num">02</div><div class="name">Receive<br>only</div><span class="tag">Listen</span></div>
+    <div class="items">
+      ${item('walkie', 'GMRS / HAM handheld', 'This is the UV-5R Mini. Scan 2 m / 70 cm, repeaters, weather, airband.')}
+      ${item('sdr', 'SDR, HF', 'Laptop, phone. Shortwave and far-away stations.')}
+      <div class="reach"><span class="label">Reach</span><b>Regional</b> → <b>National</b> → <b>Global</b></div>
+      <div class="mini"><b>With your Mini:</b> no license is needed to listen. Load the channel list (<a href="#program">Program it</a>), hold <kbd>#</kbd> to scan, and learn who's on the air near you before you ever need it.</div>
+    </div>
+  </div>
+  ${ic('down', 'class="arrow"')}
+  <div class="card black phase">
+    <div><p class="label">Phase</p><div class="num">03</div><div class="name">Add<br>transmit</div><span class="tag">Two-way</span></div>
+    <div class="items">
+      ${item('walkieTalk', 'GMRS / HAM', 'Talk back, not just listen.')}
+      ${item('hf', 'HF transceiver', 'Xiegu G90 · Xiegu X6200 · truSDX')}
+      <div class="mini"><b>With your Mini:</b> pass the ham <b>Technician</b> exam (35 questions, $35 FCC fee) and the Mini becomes a 5 W, 2 m / 70 cm radio that reaches repeaters 20–50+ miles away. Your BTECH UV-PRO is the same license.</div>
+    </div>
+  </div>
+  ${foot()}
+</section>
+
+<!-- 2 · LAYERS -->
+<section class="slide" id="layers">
+  <p class="label">Layered comms plan</p>
+  <h1 class="two">The Group needs every layer.<br>Families only need local.</h1>
+  <div class="card">
+    <div class="group-head"><h2>${ic('users', 'width="22" height="22"')}THE GROUP</h2><span class="label" style="margin:0">4 capabilities</span></div>
+    <div class="sub">Local</div>
+    <div class="row2">
+      <div class="card"><h3>${ic('walkie', 'width="16" height="16"')}Local Voice</h3>
+        <div class="pills"><span class="pill sm">GMRS</span><span class="pill sm">FRS</span><span class="pill sm">CB</span><span class="pill sm">HAM 2m/70cm</span></div>
+        <small>0–5 miles direct, 20–50 through a repeater. The Mini lives here.</small></div>
+      <div class="card"><h3>${ic('mesh', 'width="16" height="16"')}Local Digital</h3>
+        <div class="pills"><span class="pill sm">Meshtastic</span><span class="pill sm">MeshCore</span><span class="pill sm">Reticulum</span></div>
+        <small>Silent texts and GPS pins. Hops node to node across town.</small></div>
+    </div>
+    <div class="sub">Regional / National <span class="tag">Group only</span></div>
+    <div class="row2">
+      <div class="card black"><h3>${ic('tower', 'width="16" height="16"')}Voice HF</h3><small>Long-haul voice nets. 40 m / 80 m, General license.</small></div>
+      <div class="card black"><h3>${ic('hf', 'width="16" height="16"')}Digital HF</h3><small>Long-haul text and data. JS8Call, Winlink email.</small></div>
+    </div>
+    <div class="card dash" style="margin-top:16px">
+      <div class="group-head" style="margin-bottom:10px"><span class="label" style="margin:0">Within the group</span><span class="label" style="margin:0">2 capabilities each</span></div>
+      <h2 style="margin-bottom:12px">Families</h2>
+      <div class="row3">
+        ${['Our family', 'Family 2', 'Family 3'].map((f, i) => `<div class="card"><h3>${ic('home', 'width="16" height="16"')}${f}</h3>
+          <ul class="ticks"><li>Local Voice</li><li>Local Digital</li></ul>
+          ${i === 0 ? '<small>FRS pack + UV-5R Mini + BTECH UV-PRO</small>' : '<small>FRS pack, one ham HT</small>'}</div>`).join('')}
+      </div>
+    </div>
+  </div>
+  <p class="note">Not everybody needs to do everything. One licensed person per family listens to the group on 2 m and relays to the house on FRS.</p>
+  ${foot()}
+</section>
+
+<!-- 3 · OUR PLAN -->
+<section class="slide" id="plan">
+  <p class="label">Our plan · Who, where, when</p>
+  <h1 class="two">PACE: four ways to reach each other, in order.</h1>
+  <div class="pace">
+    <div class="card"><div class="letter">P</div><div class="what"><b>Primary · Phones</b><small>Call, then text. One text to the out-of-area contact; texts get through when calls don't.</small></div><div class="ch">Cell / SMS</div></div>
+    <div class="card"><div class="letter">A</div><div class="what"><b>Alternate · FRS</b><small>Everyone in the house, kids too. No privacy code (it only hides others from you). The Mini can listen in.</small></div><div class="ch">${fill(R.gmrs, 'FRS 3 · 462.6125', 'radio.gmrs')}</div></div>
+    <div class="card"><div class="letter">C</div><div class="what"><b>Contingency · 2 m simplex</b><small>Mini ↔ UV-PRO, radio to radio, no repeater. Licensed operators, or anyone in a life-threatening emergency.</small></div><div class="ch">${fill(R.ham, '146.550 FM', 'radio.ham')}</div></div>
+    <div class="card black"><div class="letter">E</div><div class="what"><b>Emergency · Call for help</b><small>National calling frequency or the nearest repeater, then go to the meet-up point at the next check-in time.</small></div><div class="ch"><span class="freq">146.520</span><br><span class="mute" style="font-size:11px">+ meet-up point</span></div></div>
+  </div>
+
+  <div class="sub" style="margin-top:22px">Check-in schedule if we're apart · the 3-3-3 rule</div>
+  <div class="row3">
+    <div class="card"><h3>${ic('walkie', 'width="16" height="16"')}Channel 3</h3><small>FRS 3 for the family. Licensed radios: 146.550 at the same times.</small></div>
+    <div class="card"><h3>${ic('clock', 'width="16" height="16"')}Every 3 hours</h3><small>On the hour: 9 am, noon, 3, 6, 9 pm.</small></div>
+    <div class="card"><h3>${ic('ear', 'width="16" height="16"')}For 3 minutes</h3><small>Listen first, then call once a minute. Radio off after to save battery.</small></div>
+  </div>
+  <div class="row2" style="margin-top:12px">
+    <div class="card"><h3>Say this</h3>
+      <p class="script">"Mom, this is Dad. Dad at the house. Everyone OK. Over."<i>Who you're calling · who you are · where · status · "over"</i></p></div>
+    <div class="card"><h3>Status words</h3>
+      <table class="tbl"><tr><td><b>OK</b></td><td>Safe, no help needed</td></tr><tr><td><b>Moving</b></td><td>Heading to the meet-up</td></tr><tr><td><b>Need help</b></td><td>Then say what and where</td></tr><tr><td><b>Mayday</b></td><td>Life in danger, everyone else go quiet</td></tr></table></div>
+  </div>
+  ${foot()}
+</section>
+
+<!-- 4 · KNOW THE MINI -->
+<section class="slide" id="radio">
+  <p class="label">Baofeng UV-5R Mini · Know your radio</p>
+  <h1 class="two">Small radio, five watts,<br>listens to almost everything.</h1>
+  <div class="row2">
+    <div class="card"><h3>${ic('key', 'width="16" height="16"')}Buttons that matter</h3>
+      <table class="tbl" style="margin-top:8px">
+        <tr><td><kbd>Volume knob</kbd></td><td>Turn right to power on and turn up</td></tr>
+        <tr><td><kbd>PTT-A</kbd> <kbd>PTT-B</kbd></td><td>Two talk buttons on the side: top or bottom line</td></tr>
+        <tr><td><kbd>SK1</kbd></td><td>Hold: open squelch (hear weak signals). Tap: FM radio, scan, flashlight… (you choose)</td></tr>
+        <tr><td><kbd>V/M</kbd></td><td>Frequency mode (VFO) ↔ saved channels</td></tr>
+        <tr><td><kbd>A/B</kbd></td><td>Switch the top/bottom line</td></tr>
+        <tr><td><kbd>MENU</kbd> <kbd>EXIT</kbd></td><td>Settings / back</td></tr>
+        <tr><td><kbd>hold 0</kbd></td><td>NOAA weather</td></tr>
+        <tr><td><kbd>hold #</kbd></td><td>Start / stop scan</td></tr>
+        <tr><td><kbd>hold *</kbd></td><td>Lock keypad</td></tr>
+        <tr><td><kbd>hold 8</kbd></td><td>High / low power</td></tr>
+      </table></div>
+    <div class="stack">
+      <div class="card"><h3>${ic('wave', 'width="16" height="16"')}What it hears</h3>
+        <table class="tbl" style="margin-top:8px">
+          <tr><td class="freq">76–108</td><td>FM broadcast</td></tr>
+          <tr><td class="freq">108–136</td><td>Airband (AM), needs CHIRP to add</td></tr>
+          <tr><td class="freq">136–174</td><td>2 m ham, NOAA, MURS <b>· talks</b></td></tr>
+          <tr><td class="freq">350–390</td><td>Listen only</td></tr>
+          <tr><td class="freq">400–520</td><td>70 cm ham, FRS/GMRS <b>· talks</b></td></tr>
+        </table><small>999 channels · about 4 W high, 2 W low · 1600 mAh, USB-C</small></div>
+      <div class="card black"><h3>Legal, in one look</h3>
+        <ul class="ticks"><li>Listen to any of it: no license</li><li>Talk on ham 2 m / 70 cm with a Technician license</li><li>Talk anywhere if a life is in danger right now (FCC 97.403)</li></ul>
+        <ul class="ticks x"><li>FRS / GMRS / MURS transmit: not certified for it</li><li>Encryption or codes on ham</li></ul></div>
+    </div>
+  </div>
+  ${foot()}
+</section>
+
+<!-- 5 · HOW-TO -->
+<section class="slide" id="howto">
+  <p class="label">How-to · From the keypad</p>
+  <h1 class="two">Six things to practice<br>before you need them.</h1>
+  <div class="steps">
+    <div class="card step"><h3><span class="n">1</span>Get the weather</h3><ol>
+      <li>Turn the knob on.</li><li>Hold <kbd>0</kbd> for 3 s. Weather mode.</li><li>Hold <kbd>#</kbd> for 3 s to scan all 10 weather channels. It stops on yours.</li><li>Tap <kbd>EXIT</kbd> to leave.</li></ol></div>
+    <div class="card step"><h3><span class="n">2</span>Tune a frequency</h3><ol>
+      <li><kbd>V/M</kbd> until <b>VFO</b> shows.</li><li><kbd>A/B</kbd> to pick the top line.</li><li>Type it, no dot: <kbd>1</kbd><kbd>4</kbd><kbd>6</kbd><kbd>5</kbd><kbd>2</kbd><kbd>0</kbd>.</li><li>Hear nothing? Hold <kbd>SK1</kbd> to open squelch.</li></ol></div>
+    <div class="card step"><h3><span class="n">3</span>Save it as a channel</h3><ol>
+      <li>Tune it (step 2), and set any tone or offset first.</li><li><kbd>MENU</kbd> <kbd>3</kbd> <kbd>MENU</kbd>, scroll to <b>CH Memory</b>.</li><li><kbd>MENU</kbd>, pick a number with <kbd>▲</kbd><kbd>▼</kbd>, <kbd>MENU</kbd>. Beep = saved.</li><li>Name it: <kbd>V/M</kbd> to the channel, <kbd>MENU</kbd> <kbd>3</kbd> → <b>CH.Name</b>.</li></ol></div>
+    <div class="card step"><h3><span class="n">4</span>Talk radio-to-radio</h3><ol>
+      <li>Both radios on the same frequency (146.550).</li><li>Listen 10 seconds. Busy? Wait.</li><li>Hold <kbd>PTT</kbd>, wait 1 second, talk 5 cm from the mic.</li><li>Let go to hear. Green light = receiving.</li></ol></div>
+    <div class="card step"><h3><span class="n">5</span>Use a repeater</h3><ol>
+      <li>Look up a local one (RepeaterBook, while online): output, offset, tone.</li><li>Tune the output. <kbd>MENU</kbd> <kbd>3</kbd> → <b>Offset</b> 0.600 (2 m) or 5.000 (70 cm), <b>Direction</b> + or −.</li><li><b>TX CTCSS</b> → the repeater's tone.</li><li>Key up, say your callsign, listen for the tail.</li></ol></div>
+    <div class="card step"><h3><span class="n">6</span>Find who's talking</h3><ol>
+      <li>Hold <kbd>#</kbd> to scan saved channels. Hold again to stop.</li><li>Nearby radio? Press <b>Search</b> and key it up close: the Mini shows its frequency and tone.</li><li><kbd>MENU</kbd> to save what it found.</li></ol></div>
+  </div>
+  <p class="note">Menu numbers shift between firmware versions. If <kbd>MENU</kbd> <kbd>3</kbd> doesn't show channel settings, scroll with <kbd>▲</kbd><kbd>▼</kbd>. The full manual is in <a href="guides/radio/Baofeng-UV-5R-Mini-Manual.pdf" target="_blank">Docs</a>.</p>
+  ${foot()}
+</section>
+
+<!-- 6 · PROGRAM IT -->
+<section class="slide" id="program">
+  <p class="label">Program it · Once, with CHIRP</p>
+  <h1 class="two">Load every channel in<br>five minutes, not fifty.</h1>
+  <div class="row2">
+    <div class="card black step"><h3>${ic('doc', 'width="16" height="16"')}On the Mac (CHIRP)</h3><ol>
+      <li>Plug in the PC03 USB-C cable (or K1 2-pin). Radio on.</li>
+      <li>Open <b>CHIRP</b> (installed in Applications; needs Rosetta).</li>
+      <li><b>Radio → Download from radio</b>: Baofeng · UV-5R Mini. <b>Save this file first</b>: it's your backup.</li>
+      <li><b>File → Import</b> the family list below.</li>
+      <li><b>Radio → Upload to radio</b>. It restarts.</li></ol>
+      <p style="margin:12px 0 0"><a class="btn ghost" href="radio/uv5r-mini-family.csv" download>${ic('dl', 'width="14" height="14"')}Family channel list (CSV)</a></p></div>
+    <div class="card step"><h3>${ic('walkie', 'width="16" height="16"')}No computer?</h3><ol>
+      <li>Phone app over Bluetooth: <kbd>MENU</kbd> <kbd>4</kbd> → <b>Wireless</b> → On.</li>
+      <li>Or one-key copy: pair with another Mini.</li>
+      <li>Or the keypad: How-to steps 2–3.</li></ol>
+      <small style="margin-top:10px">Airband (108–136 AM) can only be added with CHIRP; the factory software blocks it.</small></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <div class="group-head" style="margin-bottom:6px"><h3>Channel list in the CSV</h3><span class="label" style="margin:0">${7 + 22 + 5} channels</span></div>
+    <div class="scroll"><table class="tbl">
+      <tr><th>Ch</th><th>Name</th><th>MHz</th><th>Use</th><th>Talk?</th></tr>
+      <tr><td>1</td><td>FAMSPX</td><td class="freq">146.550</td><td>Family simplex (Contingency)</td><td class="ok">License</td></tr>
+      <tr><td>2</td><td>CALL2M</td><td class="freq">146.520</td><td>National calling (Emergency)</td><td class="ok">License</td></tr>
+      <tr><td>3</td><td>CALL70</td><td class="freq">446.000</td><td>70 cm calling</td><td class="ok">License</td></tr>
+      <tr><td>4</td><td>APRS</td><td class="freq">144.390</td><td>Hear the UV-PRO's position packets</td><td class="no">Listen</td></tr>
+      <tr><td>5</td><td>AIR121</td><td class="freq">121.500</td><td>Aircraft emergency (AM)</td><td class="no">Listen</td></tr>
+      <tr><td>10–16</td><td>WX1–WX7</td><td class="freq">162.400–.550</td><td>NOAA weather</td><td class="no">Listen</td></tr>
+      <tr><td>21–42</td><td>FRS01–22</td><td class="freq">462–467</td><td>Family &amp; neighbors (FRS 3 = Alternate)</td><td class="no">Listen</td></tr>
+      <tr><td>50+</td><td colspan="4"><span class="fill">Empty: add 3–5 local repeaters from RepeaterBook while you're online.</span></td></tr>
+    </table></div>
+    <details style="margin-top:10px;font-size:12.5px"><summary style="cursor:pointer">All 22 FRS frequencies</summary>
+      <div class="abc" style="grid-template-columns:repeat(auto-fill,minmax(120px,1fr))">${FRS.map(([c, f]) => `<span><b style="width:22px">${c}</b> <span class="freq">${f}</span></span>`).join('')}</div></details>
+  </div>
+  ${foot()}
+</section>
+
+<!-- 7 · ON THE AIR -->
+<section class="slide" id="talk">
+  <p class="label">On the air · Talk like you've done it before</p>
+  <h1 class="two">Listen first. Short calls.<br>Say who you are.</h1>
+  <div class="row2">
+    <div class="card"><h3>Calling for help</h3>
+      <p class="script">"Mayday, mayday, mayday. This is [name], spelled out. At [cross streets / city]. [What happened: child not breathing]. Need an ambulance. Over."<i>Repeat every minute. Switch to 146.520, then a repeater, if no answer.</i></p></div>
+    <div class="card"><h3>Licensed contact</h3>
+      <p class="script">"KK7ABC listening on 146.520."<i>Say your callsign at the start, every 10 minutes, and at the end.</i></p>
+      <p class="script">"KK7ABC, this is KK7XYZ. Go to 146.550? Over."<i>Then move off the calling frequency.</i></p></div>
+  </div>
+  <div class="row2" style="margin-top:12px">
+    <div class="card"><h3>Do</h3><ul class="ticks"><li>Count "one-thousand" after pressing PTT</li><li>Keep it under 30 seconds</li><li>Low power when close (hold <kbd>8</kbd>)</li><li>Hold the radio upright, antenna vertical</li></ul></div>
+    <div class="card"><h3>Don't</h3><ul class="ticks x"><li>Use real names and addresses on the air unless it's an emergency</li><li>Say where the supplies are</li><li>Talk over someone: wait for a gap</li><li>Transmit without the antenna</li></ul></div>
+  </div>
+  <div class="card" style="margin-top:12px"><h3>Spell it (NATO alphabet)</h3><div class="abc">${'Alfa Bravo Charlie Delta Echo Foxtrot Golf Hotel India Juliett Kilo Lima Mike November Oscar Papa Quebec Romeo Sierra Tango Uniform Victor Whiskey X-ray Yankee Zulu'.split(' ').map(w => `<span><b>${w[0]}</b>${w}</span>`).join('')}</div></div>
+  ${foot()}
+</section>
+
+<!-- 8 · KIT -->
+<section class="slide" id="kit">
+  <p class="label">Kit &amp; upgrades · Cheap first</p>
+  <h1 class="two">Five small upgrades<br>that double the range.</h1>
+  <div class="stack">
+    ${[['bolt', 'Power', '$15', 'A USB-C power bank charges it anywhere (radio off while charging). Spare 1600 mAh battery for the go-bag.'],
+       ['tower', 'Longer antenna', '$20', 'The 3–4" stock stub is the weak link. A 15" dual-band whip (check SMA male vs female) roughly doubles usable range.'],
+       ['ear', 'Earpiece', '$10', 'K1 2-pin earpiece. Listen quietly at night or in a crowd.'],
+       ['doc', 'Cable', '$20', 'BTECH PC03 USB-C programming cable for CHIRP.'],
+       ['check', 'License', '$35', 'Technician exam. Study with HamStudy or the ARRL manual, test with a local VE team. Then call 146.520 and introduce yourself.']]
+      .map(([i, t, p, d], n) => `<div class="card ${n === 4 ? 'black' : ''}" style="display:grid;grid-template-columns:24px 1fr auto;gap:12px;align-items:start">${ic(i, 'width="20" height="20"')}<div><b>${t}</b><small>${d}</small></div><span class="pill sm">${p}</span></div>`).join('')}
+  </div>
+  <div class="card dash" style="margin-top:12px"><h3>Monthly drill · 10 minutes</h3>
+    <ul class="ticks"><li>Charge every radio</li><li>Hold <kbd>0</kbd>: weather still comes in</li><li>Family check on FRS 3 from the far end of the house and the street corner</li><li>Mini ↔ UV-PRO on 146.550</li><li>Each kid says the 3-3-3 rule back to you</li></ul></div>
+  <p class="note">Prices are rough. Repeaters and nets change; refresh the list from RepeaterBook and your local ARES group a couple of times a year.</p>
+  ${foot()}
+</section>`;
+</script>
+</body>
+</html>

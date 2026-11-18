@@ -27,7 +27,8 @@ window.TOPICS = [
   { id: 'comms', title: 'Comms', sub: 'Radio · GMRS · NOAA', icon: 'radio', c: ['#64d2ff', '#1c87c9'],
     blurb: 'Your BTECH UV-PRO and Baofeng UV-5R Mini, ham and GMRS frequencies, APRS, NOAA weather, airband.',
     keywords: ['amateur radio emergency communications', 'NOAA Weather Radio', 'APRS', 'General Mobile Radio Service', 'Family Radio Service', 'repeater', 'Q code', 'NATO phonetic alphabet'],
-    emergencies: ['nocomms'], docs: ['guides/radio/BTECH-UV-PRO-Manual-Rev3.pdf', 'guides/radio/BTECH-App-Manual-UV-PRO-2025.pdf', 'guides/radio/Baofeng-UV-5R-Mini-Manual.pdf', 'guides/radio/Miklor-UV-5R-Mini-Review.html', 'guides/radio/CISA-NIFOG-2.02.pdf', 'guides/radio/ARRL-ARES-Field-Resources-Manual-2019.pdf', 'guides/radio/ARRL-US-Amateur-Bands-Chart.pdf', 'guides/radio/FAA-Chart-Supplement-Southwest-2026-10-29.pdf', 'guides/radio/FAA-Chart-Supplement-South-Central-2026-10-29.pdf', 'guides/radio/Baofeng-UV-5R-Mini-FCC-Certificate.pdf'] },
+    emergencies: ['nocomms'], docs: ['guides/radio/BTECH-UV-PRO-Manual-Rev3.pdf', 'guides/radio/BTECH-App-Manual-UV-PRO-2025.pdf', 'guides/radio/Baofeng-UV-5R-Mini-Manual.pdf', 'guides/radio/Miklor-UV-5R-Mini-Review.html', 'guides/radio/CISA-NIFOG-2.02.pdf', 'guides/radio/ARRL-ARES-Field-Resources-Manual-2019.pdf', 'guides/radio/ARRL-US-Amateur-Bands-Chart.pdf', 'guides/radio/FAA-Chart-Supplement-Southwest-2026-10-29.pdf', 'guides/radio/FAA-Chart-Supplement-South-Central-2026-10-29.pdf', 'guides/radio/Baofeng-UV-5R-Mini-FCC-Certificate.pdf'],
+    links: [['Family Comms Plan (UV-5R Mini)', 'comms.html']] },
   { id: 'home', title: 'Home & Shelter', sub: 'Quake · fire · flood · shutoffs', icon: 'home', c: ['#a2845e', '#6b5236'],
     blurb: 'Local hazards for Las Vegas, Henderson and San Antonio: heat, flash floods, freezes, quakes, fire.',
     keywords: ['earthquake preparedness', 'flash flood', 'wildfire', 'extreme heat', 'winter storm', 'smoke detector', 'fire extinguisher', 'emergency shelter'],
@@ -62,5 +63,6 @@ window.FAMILY_PAGES = [
   { id: 'start', title: 'Start here', sub: 'How this works', icon: 'star', c: ['#ffd60a', '#ff9f0a'] },
   { id: 'plan', title: 'Family Plan', sub: 'Contacts · meet-ups · bags', icon: 'clipboard', c: ['#5e5ce6', '#3634a3'] },
   { id: 'house', title: 'Our House', sub: 'Shutoffs & supplies', icon: 'home', c: ['#a2845e', '#6b5236'] },
+  { id: 'comms', title: 'Comms Plan', sub: 'Radios · channels · UV-5R Mini', icon: 'radio', c: ['#64d2ff', '#1c87c9'], href: 'comms.html' },
   { id: 'kids', title: 'Kids card', sub: 'Fever · dosing · CPR', icon: 'child', c: ['#ff375f', '#c2002e'] },
 ];

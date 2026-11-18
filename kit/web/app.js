@@ -120,7 +120,7 @@ function searchIndex() {
   (window.EMERGENCIES || []).forEach(e => out.push({ t: e.title, k: 'Emergency', href: 'emergency.html?id=' + e.id, ic: e.icon,
     text: [e.title, e.sub, ...(e.phases || []).flatMap(p => p.items.map(i => i.t + ' ' + i.d))].join(' ') }));
   (window.TOPICS || []).forEach(t => out.push({ t: t.title, k: 'Topic', href: 'topic.html?id=' + t.id, ic: t.icon, text: [t.title, t.sub, t.blurb, ...(t.keywords || [])].join(' ') }));
-  (window.FAMILY_PAGES || []).forEach(f => out.push({ t: f.title, k: 'Family', href: 'family.html?id=' + f.id, ic: f.icon, text: f.title + ' ' + f.sub }));
+  (window.FAMILY_PAGES || []).forEach(f => out.push({ t: f.title, k: 'Family', href: f.href || 'family.html?id=' + f.id, ic: f.icon, text: f.title + ' ' + f.sub }));
   allDocs().forEach(d => out.push({ t: d.title, k: d.path.endsWith('.pdf') ? 'PDF' : 'Web page', href: d.path, ic: 'doc', text: d.title + ' ' + d.path, blank: true }));
   BIBLES.forEach(([p, t, s]) => out.push({ t, k: 'Bible', href: p, ic: 'cross', text: t + ' ' + s + ' bible scripture', blank: true }));
   (window.VIDEOS || []).forEach(v => out.push({ t: v.t, k: 'Video', href: videoHref(v), ic: 'film', text: v.t + ' video ' + VIDEO_COLLECTIONS[v.c].channel, blank: true }));

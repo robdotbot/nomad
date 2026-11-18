@@ -58,7 +58,7 @@
 
   const card = (href, ic, c, title, sub, extra = '') =>
     `<a class="card" href="${href}" style="${grad(...c)}" ${extra}><div class="ico">${icon(ic)}</div><div><b>${esc(title)}</b><small>${esc(sub)}</small></div></a>`;
-  $('#family').innerHTML = FAMILY_PAGES.map(f => card('family.html?id=' + f.id, f.icon, f.c, f.title, f.sub)).join('');
+  $('#family').innerHTML = FAMILY_PAGES.map(f => card(f.href || 'family.html?id=' + f.id, f.icon, f.c, f.title, f.sub)).join('');
   $('#topics').innerHTML = TOPICS.map(t => card('topic.html?id=' + t.id, t.icon, t.c, t.title, t.sub)).join('');
 
   const tools = [
