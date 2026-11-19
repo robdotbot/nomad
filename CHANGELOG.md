@@ -3,7 +3,7 @@
 Releases are on GitHub: https://github.com/robdotbot/nomad/releases. Each one has the Command Center
 zip (see "Releases" in the README). `scripts/release.sh` uses the section for its version as the notes.
 
-## Unreleased
+## 1.1.0 (2026-11-19)
 
 - **Dog Emergency** checklist on the home screen: when to go to the ER vet now (bloat, heatstroke,
   snake bite, poisoning…), poison lines, muzzling, bleeding, choking, dog CPR, seizures, heat and
@@ -11,6 +11,12 @@ zip (see "Releases" in the README). `scripts/release.sh` uses the section for it
 - New **Pets** topic, with the UF/IFAS "Emergency First Aid for Cats and Dogs" guide and dog videos.
 - Near Home map: **Vets** layer (vets and animal shelters from OpenStreetMap); `map.html?near=1&show=Vets`.
 - Family Plan: Pets panel and a `pets` list in `family.js` (vet and 24/7 ER vet numbers).
+- README: step-by-step **Windows install** (reformatting the drive exFAT, running it, what's different,
+  troubleshooting).
+- `scripts/restore-from-nas.sh` no longer stops on exFAT drives.
+
+Updating a drive from the zip: the new guide and the vets on the map also need
+`./build.sh guides docs-index near-index` from this repo.
 
 ## 1.0.0 (2026-11-18)
 
