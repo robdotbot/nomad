@@ -33,7 +33,7 @@ Faster, if the NAS backup exists: `scripts/restore-from-nas.sh` copies everythin
 |---|---|---|---|
 | `kit` | Launcher, map and chat pages, start script, README, guide index | <1 MB | `kit/` in this repo |
 | `web` | MapLibre, Protomaps basemaps, offline fonts and sprites, CyberChef | 95 MB | jsDelivr, GitHub |
-| `guides` | Army first aid and survival, FEMA, Las Vegas, San Antonio, radio manuals, NIFOG, ARES, FAA airband, 5 Bibles | 250 MB | `manifests/guides.tsv`, `manifests/bibles.txt` |
+| `guides` | Army first aid and survival, FEMA, Las Vegas, San Antonio, radio manuals, NIFOG, ARES, FAA airband, 6 Bibles (incl. Vietnamese), religions of Vietnam (Buddhist sutras, Tao Te Ching, Analects, Catholic catechism) | 300 MB | `manifests/guides.tsv`, `manifests/bibles.txt` |
 | `docs-index` | Page counts and first-page thumbnails for the launcher (`web/data/docs.js`, `web/thumbs/`) | 5 MB | the guides |
 | `installers` | Kiwix, Ollama, Python, Kolibri wheels, pmtiles, Baofeng CPS; writes `SHA256SUMS` | 350 MB | `manifests/installers.tsv` |
 | `maps` | US West (Las Vegas, Henderson) and San Antonio, street level | 3.6 GB | Protomaps build, `manifests/maps.tsv` |

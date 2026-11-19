@@ -59,6 +59,13 @@ const grad = (c1, c2) => `--c1:${c1};--c2:${c2}`;
 
 // Docs: generated index (data/docs.js) plus friendly titles.
 const DOC_TITLES = {
+  'guides/religion/Lotus-Sutra-Kern-1884.pdf': 'Lotus Sutra (Kinh Pháp Hoa), Kern 1884',
+  'guides/religion/Pure-Land-Diamond-and-Heart-Sutras-1894.pdf': 'Amitābha, Diamond and Heart Sutras (Kinh A Di Đà, Kim Cang, Bát Nhã), 1894',
+  'guides/religion/Dhammapada-Muller.html': 'The Dhammapada (Kinh Pháp Cú), Müller',
+  'guides/religion/Gospel-of-Buddha-Carus.html': 'The Gospel of Buddha, Carus',
+  'guides/religion/Tao-Te-Ching-Legge.html': 'Tao Te Ching (Đạo Đức Kinh), Legge',
+  'guides/religion/Confucian-Analects-Legge.html': 'The Analects of Confucius (Luận Ngữ), Legge',
+  'guides/religion/Baltimore-Catechism-No1.html': 'Baltimore Catechism No. 1 (Catholic, 1885)',
   'guides/military/ATP-4-02.11-First-Aid-2026.pdf': 'Army ATP 4-02.11: Casualty Response and First Aid (2026)',
   'guides/military/Multi-Service-Survival-Manual.pdf': 'Multi-Service Survival Manual',
   'guides/fema/FEMA-Are-You-Ready-Guide.pdf': 'FEMA: Are You Ready? Citizen Preparedness Guide',
@@ -84,6 +91,7 @@ const BIBLES = [
   ['guides/bible/eng-asv/index.htm', 'American Standard Version', 'Literal, 1901'],
   ['guides/bible/engDRA/index.htm', 'Douay-Rheims', 'Catholic'],
   ['guides/bible/eng-Brenton/index.htm', 'Brenton Septuagint', 'Orthodox Old Testament'],
+  ['guides/bible/vie1934/index.htm', 'Kinh Thánh (Vietnamese Bible)', 'Bản Truyền Thống 1925, Protestant'],
 ];
 const docTitle = p => DOC_TITLES[p] || p.split('/').pop().replace(/\.(pdf|html?)$/, '').replace(/[-_]+/g, ' ');
 const fmtSize = b => b >= 1e6 ? (b / 1e6).toFixed(1) + ' MB' : Math.max(1, Math.round(b / 1e3)) + ' KB';
