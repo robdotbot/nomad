@@ -5,7 +5,7 @@
 # Target folder: NOMAD in config.sh (default "/Volumes/EXTREME PRO/NOMAD").
 # To rebuild from the NAS backup instead: scripts/restore-from-nas.sh
 source "$(dirname "$0")/scripts/lib.sh"
-ALL=(kit web guides docs-index installers maps near-index zim videos-index models kolibri)   # roughly smallest to largest
+ALL=(kit web guides docs-index installers windows maps near-index zim videos-index models kolibri)   # roughly smallest to largest
 steps=("$@"); [[ $# -eq 0 ]] && steps=("${ALL[@]}")
 [[ -d "$(dirname "$NOMAD")" ]] || { echo "drive not found: $(dirname "$NOMAD")" >&2; exit 1; }
 for s in "${steps[@]}"; do

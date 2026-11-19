@@ -54,7 +54,7 @@
       <a class="back" href="watch.html${topic ? '?t=' + topic : ''}">${icon('back')}Videos</a>
       <div class="player">
         <div class="screen" id="screen"><video id="vid" controls autoplay playsinline preload="metadata" ${v.th ? `poster="${esc(v.th)}"` : ''} src="${esc(src)}"></video>
-          <div class="err"><div><b>This video won't play.</b><br>Start NOMAD with <i>Start NOMAD.command</i> on the drive (it runs the video server), then reload.</div></div></div>
+          <div class="err"><div><b>This video won't play.</b><br>Double-click <i>Start NOMAD</i> on the drive (.command on a Mac, .bat on Windows). It runs the video server. Then reload.</div></div></div>
         <div class="vt">${esc(v.t)}</div>
         <div class="vm">${esc(c.channel)}${v.y ? ' · ' + v.y : ''}${v.d ? ' · ' + fmtDur(v.d) : ''} · plays from the drive, no internet</div>
         <div class="cols">

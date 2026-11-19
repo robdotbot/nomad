@@ -4,13 +4,15 @@
     python3 serve.py [port]        (Start NOMAD.command runs this on 8090)
 
   /                     web/ on this drive (static files, with Range support)
+  /guides/...           guides/ on this drive (also works on exFAT, where web/guides can't be a symlink)
   /zim/<book>/<path>    one entry from zim/<book>.zim, e.g. /zim/urban-prepper_en_all_2026-08/videos/<id>/video.webm
 
 Videos sit in uncompressed ZIM clusters, so they stream (and seek) straight from the file. Small
 compressed entries need zstd: built into Python 3.14+, else the `zstandard` package. Standard library
-only; works on the stock macOS python3. Listens on 127.0.0.1 only.
+only; works on the stock macOS python3 and the portable Windows Python in windows/python.
+Listens on 127.0.0.1 only.
 """
-import http.server, lzma, mimetypes, os, re, socketserver, struct, sys, threading, urllib.parse
+import http.server, lzma, os, re, socketserver, struct, sys, threading, urllib.parse
 from functools import lru_cache
 
 try:
@@ -24,7 +26,14 @@ except ImportError:
         unzstd = None
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-WEB, ZIMS = os.path.join(ROOT, "web"), os.path.join(ROOT, "zim")
+WEB, ZIMS, GUIDES = (os.path.join(ROOT, d) for d in ("web", "zim", "guides"))
+# Set types here, not from the system: Windows takes them from the registry, which often has .js as text/plain.
+TYPES = {".html": "text/html", ".htm": "text/html", ".js": "text/javascript", ".mjs": "text/javascript",
+         ".css": "text/css", ".json": "application/json", ".svg": "image/svg+xml", ".png": "image/png",
+         ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp", ".gif": "image/gif",
+         ".pdf": "application/pdf", ".txt": "text/plain; charset=utf-8", ".csv": "text/csv; charset=utf-8",
+         ".webm": "video/webm", ".mp4": "video/mp4", ".pbf": "application/x-protobuf", ".wasm": "application/wasm",
+         ".woff2": "font/woff2", ".ico": "image/x-icon"}
 
 
 class Zim:
@@ -128,6 +137,17 @@ class Handler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, *a):
         pass
 
+    def guess_type(self, path):
+        return TYPES.get(os.path.splitext(path)[1].lower()) or super().guess_type(path)
+
+    def translate_path(self, path):
+        # /guides/... comes from guides/ next to web/, whether or not web/guides is a symlink.
+        p = urllib.parse.unquote(urllib.parse.urlsplit(path).path)
+        if (p == "/guides" or p.startswith("/guides/")) and not os.path.isdir(os.path.join(WEB, "guides")):
+            parts = [x for x in p.split("/")[2:] if x and x not in (".", "..") and ":" not in x and "\\" not in x]
+            return os.path.join(GUIDES, *parts) + ("/" if p.endswith("/") else "")
+        return super().translate_path(path)
+
     def end_headers(self):
         self.send_header("Accept-Ranges", "bytes")
         if not self.path.startswith("/zim/"):
@@ -204,8 +224,6 @@ class Server(socketserver.ThreadingMixIn, http.server.HTTPServer):
 
 
 if __name__ == "__main__":
-    mimetypes.add_type("video/webm", ".webm")
-    mimetypes.add_type("image/webp", ".webp")
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8090
     print("NOMAD Command Center on http://127.0.0.1:%d/" % port, flush=True)
     Server(("127.0.0.1", port), Handler).serve_forever()

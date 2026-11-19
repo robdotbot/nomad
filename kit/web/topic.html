@@ -57,7 +57,7 @@
       const en = entries.find(e => e.name.startsWith(prefix) || e.href?.includes('/' + prefix));
       const href = en?.href ? KIWIX + en.href : KIWIX + '/';
       return `<a class="card vivid" href="${href}" target="_blank" style="${grad(...t.c)}"><div class="ico">${icon('book')}</div>
-        <div><b>${esc(label)}</b><small>${en ? 'Open in the library' : 'Library is off: Kiwix app → Hotspot → Start'}</small></div></a>`;
+        <div><b>${esc(label)}</b><small>${en ? 'Open in the library' : 'Library is off: on a Mac, Kiwix app → Hotspot → Start; on Windows, Start NOMAD.bat'}</small></div></a>`;
     }).join('')}</div>`;
   })();
 

@@ -2,13 +2,15 @@
 
 Rebuilds the NOMAD offline disaster kit (Kiwix library, local AI, Khan Academy, offline maps,
 emergency guides, Bibles, offline installers) onto a drive, on an Apple Silicon Mac.
-Modelled on Project N.O.M.A.D., which only runs on x86 Ubuntu.
+The finished drive runs on a Mac or a Windows 10/11 PC. Modelled on Project N.O.M.A.D., which
+only runs on x86 Ubuntu.
 
 The content itself (~300 GB) isn't in git. The scripts download it, or restore it from the NAS.
 
 ## Build a new kit
 
-1. Format the drive APFS and name it `EXTREME PRO` (or set `NOMAD` in `config.local.sh`).
+1. Format the drive and name it `EXTREME PRO` (or set `NOMAD` in `config.local.sh`). Use **exFAT**
+   if it should also run on Windows (Windows can't read APFS); APFS is Mac only.
 2. Install the apps (online, once per Mac):
    ```
    scripts/setup-mac.sh
@@ -22,7 +24,7 @@ The content itself (~300 GB) isn't in git. The scripts download it, or restore i
    https://archive.chirpmyradio.com/chirp_next/ into `installers/radio/`, then `./build.sh installers`
    again to refresh `SHA256SUMS`.
 5. Optional: `scripts/vault.sh` (encrypted folder), `scripts/install-backup.sh` (nightly NAS backup).
-6. On the drive, double-click `Start NOMAD.command`.
+6. On the drive, double-click `Start NOMAD.command` (Mac) or `Start NOMAD.bat` (Windows).
 
 Faster, if the NAS backup exists: `scripts/restore-from-nas.sh` copies everything back from
 `HomelabBackups` (the vault and Kolibri databases included).
@@ -36,6 +38,7 @@ Faster, if the NAS backup exists: `scripts/restore-from-nas.sh` copies everythin
 | `guides` | Army first aid and survival, FEMA, Las Vegas, San Antonio, radio manuals, NIFOG, ARES, FAA airband, 6 Bibles (incl. Vietnamese), religions of Vietnam (Buddhist sutras, Tao Te Ching, Analects, Catholic catechism) | 300 MB | `manifests/guides.tsv`, `manifests/bibles.txt` |
 | `docs-index` | Page counts and first-page thumbnails for the launcher (`web/data/docs.js`, `web/thumbs/`) | 5 MB | the guides |
 | `installers` | Kiwix, Ollama, Python, Kolibri wheels, pmtiles, Baofeng CPS; writes `SHA256SUMS` | 350 MB | `manifests/installers.tsv` |
+| `windows` | Portable Windows x64 apps for `Start NOMAD.bat`: Python 3.14 (embeddable), kiwix-serve, pmtiles, Ollama, Kolibri (unpacked wheel), unpacked into `windows/` | 3.5 GB | `manifests/windows.tsv` |
 | `maps` | US West (Las Vegas, Henderson) and San Antonio, street level | 3.6 GB | Protomaps build, `manifests/maps.tsv` |
 | `near-index` | Hospitals, fire stations, police, pharmacies, water, groceries, fuel around each city (`web/data/near.js`); needs node | 0.1 MB | the maps |
 | `zim` | Wikipedia (maxi), MDWiki, iFixit, Wikivoyage, 5 zimgit guides, 6 how-to video collections; SHA-256 checked | 165 GB | `manifests/zim.txt` |
@@ -76,6 +79,10 @@ Edit the manifest or `config.sh`, then re-run that step:
 
 ## Running it (on the drive)
 
+Mac: `Start NOMAD.command`. Windows: `Start NOMAD.bat`, which runs `windows/start-nomad.ps1`. That
+starts everything hidden from `windows/` and stops it when you press Enter. On Windows the library is
+kiwix-serve on port 80 (no Kiwix app), with the same addresses, so the pages don't change.
+
 | Tool | Address |
 |---|---|
 | Launcher | http://127.0.0.1:8090/ |
@@ -83,6 +90,23 @@ Edit the manifest or `config.sh`, then re-run that step:
 | AI | Ollama, port 11434 |
 | Education | Kolibri, http://127.0.0.1:8092/ |
 | Maps | pmtiles serve, port 8091 |
+
+## Releases
+
+Each release on GitHub (https://github.com/robdotbot/nomad/releases) has the Command Center as a zip:
+pages, `serve.py`, both start scripts and the guide index, i.e. everything `./build.sh kit` puts on
+the drive. Use it to update a drive without this repo: unzip it over the drive's `NOMAD` folder. Your
+`web/data/family.js` is not in the zip, so it is kept (a blank one is in it as `family.blank.js`).
+The content (ZIMs, maps, models, Khan Academy) is not in releases; `./build.sh` downloads it.
+
+What changed in each version: [CHANGELOG.md](CHANGELOG.md).
+
+To make a release: add a section to `CHANGELOG.md`, commit, then
+```
+scripts/release.sh 1.1.0
+```
+It builds `dist/nomad-command-center-v1.1.0.zip`, tags `v1.1.0`, pushes the tag and publishes the
+GitHub release with that changelog section as its notes (needs `gh`).
 
 ## Nightly backup
 

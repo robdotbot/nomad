@@ -1,5 +1,5 @@
 // NOMAD launcher: icons, docs lookup, search and status checks shared by every page.
-const KIWIX = 'http://127.0.0.1';          // Kiwix app → Hotspot (always port 80)
+const KIWIX = 'http://127.0.0.1';          // Mac: Kiwix app → Hotspot. Windows: kiwix-serve. Both on port 80
 const OLLAMA = 'http://127.0.0.1:11434';
 const KOLIBRI = 'http://127.0.0.1:8092';
 const TILES = 'http://127.0.0.1:8091';

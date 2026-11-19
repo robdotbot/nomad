@@ -63,11 +63,11 @@
   $('#topics').innerHTML = TOPICS.map(t => card('topic.html?id=' + t.id, t.icon, t.c, t.title, t.sub)).join('');
 
   const tools = [
-    [KIWIX + '/', 'book', ['#0a84ff', '#0050b3'], 'All books', 'Wikipedia, MDWiki, iFixit, Wikivoyage…', KIWIX + '/', 'Kiwix app → Hotspot → Start'],
+    [KIWIX + '/', 'book', ['#0a84ff', '#0050b3'], 'All books', 'Wikipedia, MDWiki, iFixit, Wikivoyage…', KIWIX + '/', 'Mac: Kiwix app → Hotspot → Start. Windows: Start NOMAD'],
     ['docs.html', 'folder', ['#40c8e0', '#14839a'], 'Docs', 'PDF manuals & guides'],
-    ['chat.html', 'sparkles', ['#bf5af2', '#7d2ab8'], 'AI assistant', 'Offline chat', OLLAMA + '/api/tags', 'Run Start NOMAD.command'],
-    [KOLIBRI + '/', 'cap', ['#30d158', '#1a8a3a'], 'Education', 'Khan Academy, K–12', KOLIBRI + '/', 'Run Start NOMAD.command'],
-    ['map.html', 'map', ['#34c759', '#1f8a3b'], 'Maps', 'Offline street maps', TILES + '/us-west/0/0/0.mvt', 'Run Start NOMAD.command'],
+    ['chat.html', 'sparkles', ['#bf5af2', '#7d2ab8'], 'AI assistant', 'Offline chat', OLLAMA + '/api/tags', 'Run Start NOMAD'],
+    [KOLIBRI + '/', 'cap', ['#30d158', '#1a8a3a'], 'Education', 'Khan Academy, K–12', KOLIBRI + '/', 'Run Start NOMAD'],
+    ['map.html', 'map', ['#34c759', '#1f8a3b'], 'Maps', 'Offline street maps', TILES + '/us-west/0/0/0.mvt', 'Run Start NOMAD'],
     ['tools/cyberchef/index.html', 'flask', ['#8e8e93', '#48484a'], 'CyberChef', 'Decode, convert, hash'],
   ];
   $('#tools').innerHTML = tools.map(([href, ic, c, t, s, chk, off]) =>
@@ -94,7 +94,7 @@
     const pills = [`<span class="pill green">${icon('check')}Works with no internet</span>`];
     let books = 0;
     try { const x = await (await fetch(KIWIX + '/catalog/v2/entries?count=100', { signal: AbortSignal.timeout(2500) })).text(); books = (x.match(/<entry>/g) || []).length; } catch {}
-    pills.push(books ? `<span class="pill blue">${icon('book')}${books} books</span>` : `<span class="pill red" title="Kiwix app → Hotspot → Start">${icon('book')}Library off</span>`);
+    pills.push(books ? `<span class="pill blue">${icon('book')}${books} books</span>` : `<span class="pill red" title="Mac: Kiwix app → Hotspot → Start. Windows: Start NOMAD.bat">${icon('book')}Library off</span>`);
     pills.push(`<span class="pill orange">${icon('doc')}${(window.DOCS || []).length} guides</span>`);
     pills.push(`<span class="pill blue">${icon('cross')}${BIBLES.length} Bibles</span>`);
     if ((window.VIDEOS || []).length) pills.push(`<span class="pill orange">${icon('film')}${VIDEOS.length} videos</span>`);

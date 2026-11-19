@@ -2,13 +2,28 @@
 
 An offline knowledge kit for the Mac, modelled on Project N.O.M.A.D. (which
 only runs on x86 Ubuntu). Everything runs from the **EXTREME PRO** SSD. No internet needed.
+It also runs on a Windows 10/11 PC if the drive is formatted exFAT (see "On Windows" below).
 
-## Using it
+## Using it (Mac)
 
 1. Plug in the EXTREME PRO drive.
 2. Double-click **`Start NOMAD.command`** in this folder.
 3. The launcher opens at **http://127.0.0.1:8090/**.
 4. Library: in the Kiwix app, click **Hotspot** in the sidebar, select all the books, then **Start Hotspot** (it always uses port 80).
+
+## On Windows
+
+Windows can't read a Mac (APFS) drive. On an **exFAT** drive:
+
+1. Plug in the drive and open the `NOMAD` folder in File Explorer.
+2. Double-click **`Start NOMAD.bat`**. A window opens and starts everything from the drive's
+   `windows/` folder (Python, kiwix-serve, pmtiles, Ollama, Kolibri). Nothing is installed on the PC.
+3. The launcher opens at **http://127.0.0.1:8090/**. The library starts by itself on http://127.0.0.1/.
+4. To stop, press Enter in that window.
+
+The first time, Windows may ask to allow the apps through the firewall: they only listen on this PC,
+so you can cancel. The vault (`NOMAD Vault.sparsebundle`) only opens on a Mac. Baofeng's radio
+programmer in `installers/radio/` is a Windows app.
 
 | Tool | Address | What it is |
 |---|---|---|
@@ -29,6 +44,7 @@ only runs on x86 Ubuntu). Everything runs from the **EXTREME PRO** SSD. No inter
 | `maps/` | Offline map tiles | `HomelabBackups/nomad/maps/` |
 | `web/` | Launcher, map viewer, chat page, map fonts/sprites | `HomelabBackups/nomad/web/` |
 | `installers/` | Installer downloads | `HomelabBackups/nomad/installers/` |
+| `windows/` | Portable Windows apps for `Start NOMAD.bat` | `HomelabBackups/nomad/windows/` |
 | `ollama-models/` | AI model weights (`qwen3.8:27b-q8_0`), same files as `~/.ollama/models` on the Mac | `HomelabBackups/nomad/ollama-models/` |
 
 Offline installers for a new Mac are in `installers/` (see `installers/INSTALL.md`).
@@ -38,7 +54,7 @@ pmtiles (`brew install pmtiles`).
 
 ## Restoring to a new drive
 
-1. Format the drive APFS, name it `EXTREME PRO`.
+1. Format the drive exFAT (works on Mac and Windows) or APFS (Mac only), name it `EXTREME PRO`.
 2. Create `NOMAD/` and copy `HomelabBackups/nomad/*` into it.
 3. Copy `HomelabBackups/kiwix/*.zim` into `NOMAD/zim/`.
 4. Install the Mac apps above. The AI model comes back with `nomad/` (as `ollama-models/`), and

@@ -45,9 +45,9 @@ done
 
 # Finished ZIMs only (*.zim, never .part); rsync's hidden temp names keep the homelab Kiwix from
 # picking up half-copied files.
-zims=("$SSD/zim/"*.zim(N))
+zims=("$SSD/zim/"[^.]*.zim(N))   # not macOS "._" sidecars (exFAT)
 (( ${#zims} )) && { rsync -rt --stats "${zims[@]}" "$NAS/kiwix/" | grep -E 'transferred:|total size' || err=1; }
-rsync -rt --stats --exclude 'zim/' --exclude '.DS_Store' --exclude '/kolibri/*.sqlite3*' \
+rsync -rt --stats --exclude 'zim/' --exclude '.DS_Store' --exclude '._*' --exclude '/kolibri/*.sqlite3*' \
   "$SSD/" "$NAS/nomad/" | grep -E 'transferred:|total size' || err=1
 rsync -rt "$snap/" "$NAS/nomad/kolibri/" || err=1
 [[ -d ~/.ollama/models ]] && { mkdir -p "$NAS/nomad/ollama-models"

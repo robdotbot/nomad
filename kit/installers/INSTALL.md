@@ -1,6 +1,8 @@
 # Installing the NOMAD apps on a new Mac, offline
 
 These installers let any Apple Silicon Mac (macOS 11+) run this kit with no internet.
+**On Windows there is nothing to install:** `Start NOMAD.bat` runs the portable apps in `../windows/`
+(their original downloads are in `windows/` here). The drive must be exFAT for Windows to read it.
 Checksums are in `SHA256SUMS`. Check them with `shasum -a 256 -c SHA256SUMS` in this folder.
 
 | File | What it is | Signed |

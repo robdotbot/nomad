@@ -1,0 +1,7 @@
+# Portable Windows apps, run straight from the drive by "Start NOMAD.bat" (Windows 10/11, x64).
+# zip under installers/windows/	unpacks to windows/<dir>	source URL
+python-3.14.9-embed-amd64.zip	python	https://www.python.org/ftp/python/3.14.9/python-3.14.9-embed-amd64.zip
+kiwix-tools_win-x86_64-3.8.1.zip	kiwix	https://download.kiwix.org/release/kiwix-tools/kiwix-tools_win-x86_64-3.8.1.zip
+go-pmtiles_1.31.2_Windows_x86_64.zip	pmtiles	https://github.com/protomaps/go-pmtiles/releases/download/v1.31.2/go-pmtiles_1.31.2_Windows_x86_64.zip
+ollama-windows-amd64-v0.40.16.zip	ollama	https://github.com/ollama/ollama/releases/download/v0.40.16/ollama-windows-amd64.zip
+kolibri-0.19.5-py2.py3-none-any.whl	kolibri	https://files.pythonhosted.org/packages/py2.py3/k/kolibri/kolibri-0.19.5-py2.py3-none-any.whl
