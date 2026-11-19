@@ -21,6 +21,8 @@ Windows can't read a Mac (APFS) drive. On an **exFAT** drive:
 3. The launcher opens at **http://127.0.0.1:8090/**. The library starts by itself on http://127.0.0.1/.
 4. To stop, press Enter in that window.
 
+First time: the drive must be exFAT, and the full Windows steps and troubleshooting are in the build repo README ("Windows install").
+
 The first time, Windows may ask to allow the apps through the firewall: they only listen on this PC,
 so you can cancel. The vault (`NOMAD Vault.sparsebundle`) only opens on a Mac. Baofeng's radio
 programmer in `installers/radio/` is a Windows app.

@@ -6,5 +6,5 @@ say "restoring $NAS -> $NOMAD"
 mkdir -p "$NOMAD/zim"
 rsync -rt "$NAS/nomad/" "$NOMAD/"
 rsync -rt "$NAS/kiwix/"*.zim "$NOMAD/zim/"
-ln -sfn ../guides "$NOMAD/web/guides"
+ln -sfn ../guides "$NOMAD/web/guides" 2>/dev/null || true   # no symlinks on exFAT; serve.py covers /guides
 chmod +x "$NOMAD/Start NOMAD.command"

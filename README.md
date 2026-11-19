@@ -29,6 +29,66 @@ The content itself (~300 GB) isn't in git. The scripts download it, or restore i
 Faster, if the NAS backup exists: `scripts/restore-from-nas.sh` copies everything back from
 `HomelabBackups` (the vault and Kolibri databases included).
 
+## Windows install
+
+The kit is built on a Mac, but the finished drive also runs on a Windows 10 or 11 PC (64-bit). Nothing
+gets installed on the PC: `Start NOMAD.bat` runs portable copies of Python, kiwix-serve, pmtiles,
+Ollama and Kolibri from the drive's `windows/` folder. Not yet tried on a real PC.
+
+### 1. Make the drive readable on Windows (on the Mac, once)
+
+Windows can't read APFS, so the drive has to be **exFAT**. Reformatting erases it, so restore from the
+NAS afterwards:
+
+1. Run a backup first and check it finished: `launchctl kickstart gui/$(id -u)/local.nomad-backup`, then
+   `tail ~/Library/Logs/nomad-backup.log` until it says `done`.
+2. Find the drive's disk number (the `diskN` that holds `EXTREME PRO`), then erase it as exFAT.
+   **Check the number: this wipes that disk.**
+   ```
+   diskutil list external
+   diskutil eraseDisk ExFAT "EXTREME PRO" GPT diskN
+   ```
+3. Copy everything back from the NAS, then add the Windows apps:
+   ```
+   scripts/restore-from-nas.sh
+   ./build.sh kit windows
+   ```
+   (A brand-new drive: format it exFAT the same way and run `./build.sh`, which includes `windows`.)
+
+The vault (`NOMAD Vault.sparsebundle`) still opens on the Mac from exFAT, but not on Windows.
+
+### 2. Run it on the PC
+
+1. Plug in the drive and open **EXTREME PRO → NOMAD** in File Explorer. The drive letter doesn't matter.
+2. Double-click **`Start NOMAD.bat`**. A window opens, lists what it started, and opens the
+   Command Center at http://127.0.0.1:8090/ in the default browser.
+3. If Windows Firewall asks about Python, pmtiles or Kolibri, click **Cancel**. Everything runs on
+   this PC only and still works.
+4. Give Kolibri (Khan Academy) and the library up to a minute the first time.
+5. To stop, press **Enter** in that window, then eject the drive (Safely Remove). Closing the window
+   without pressing Enter leaves the apps running until you sign out.
+
+### 3. What's different on Windows
+
+| | Mac | Windows |
+|---|---|---|
+| Start | `Start NOMAD.command` | `Start NOMAD.bat` |
+| Library | Kiwix app → Hotspot → Start | starts by itself (kiwix-serve, port 80) |
+| AI | Ollama on the Mac's GPU | Ollama on an NVIDIA GPU if it has one, else the CPU (slow: use `qwen3.5:9b`; the 27b model needs 32 GB+ of RAM) |
+| Vault | double-click to open | Mac only |
+| Phones on the same Wi-Fi | can read the library | can't (Windows only listens to itself) |
+
+### Troubleshooting
+
+- **"Windows protected your PC"**: only happens for files downloaded from the internet, such as a
+  release zip. Click **More info → Run anyway**, or before unzipping right-click the zip →
+  **Properties → Unblock**.
+- **Library off** (everything else works): something else is using port 80, such as IIS or another web
+  server. `netstat -ano | findstr ":80 "` shows the process ID; stop it in Task Manager.
+- **A tile still says "off" after a minute**: that app's folder in `windows/` is probably missing (the window says "not found"). On the Mac, run `./build.sh windows`.
+- **"Running scripts is disabled on this system"**: start it with `Start NOMAD.bat`, not by opening
+  `windows/start-nomad.ps1` directly. The .bat runs it without changing any PC setting.
+
 ## Steps
 
 | Step | What | Size | Source |
