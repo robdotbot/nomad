@@ -69,7 +69,9 @@ Edit the manifest or `config.sh`, then re-run that step:
   Faith, Reference. Keyword chips search the Kiwix library; docs show with thumbnails.
 - **Search**: instant matches across checklists, topics and docs, plus full-text library search and "ask the AI".
 - **Watch** (`watch.html`): 600+ how-to videos from Urban Prepper, Learn Self Reliance and Canadian Prepper
-  (Kiwix video ZIMs), sorted by topic and searchable; each topic page shows its videos. They play in Kiwix.
+  (Kiwix video ZIMs), sorted by topic and searchable; each topic page shows its videos. They play in
+  play.html, streamed straight from the ZIMs by `kit/serve.py` (the launcher server on 8090, standard
+  library only, with seeking). Kiwix is not needed for videos.
 - **Near Home** (`map.html?near=1`): nearest ER, urgent care, fire, police, pharmacy, water, groceries, fuel.
 
 ## Running it (on the drive)

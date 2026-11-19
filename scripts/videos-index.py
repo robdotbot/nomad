@@ -1,7 +1,7 @@
 """Indexes the video ZIMs (YouTube channels packaged by Kiwix) for the Command Center's Watch pages.
 
 Writes web/data/videos.js (collections + every video's title, length, date) and copies each video's
-thumbnail to web/vthumbs/. Videos play in the Kiwix library; this only lists them.
+thumbnail to web/vthumbs/. Videos play in play.html, streamed from the ZIM by serve.py.
 Usage: python videos-index.py <NOMAD dir>
 """
 import json, os, re, sys
@@ -46,7 +46,8 @@ for z in zims:
                     pass
             if t.exists():
                 thumb = f"vthumbs/{t.name}"
-        videos.append({"c": ci, "s": slug, "t": v.get("title", slug), "d": seconds(v.get("duration")),
+        videos.append({"c": ci, "s": slug, "v": v.get("videoPath") or f"videos/{v['id']}/video.webm",
+                       "t": v.get("title", slug), "d": seconds(v.get("duration")),
                        "y": (v.get("publicationDate") or "")[:4], "th": thumb})
         count += 1
     collections.append({"book": book, "name": meta("Name"), "title": meta("Title") or channel.get("channelName", book),

@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Watch</title>
-<link rel="stylesheet" href="app.css">
-<script src="theme.js"></script>
+<link rel="stylesheet" href="app.css?v=2">
+<script src="theme.js?v=2"></script>
 </head>
 <body>
 <main id="main" style="--c1:#5e5ce6;--c2:#8944d8"></main>
-<script src="data/topics.js"></script>
-<script src="data/videos.js"></script>
-<script src="app.js"></script>
+<script src="data/topics.js?v=2"></script>
+<script src="data/videos.js?v=2"></script>
+<script src="app.js?v=2"></script>
 <script>
   const main = $('#main');
   const V = window.VIDEOS || [], C = window.VIDEO_COLLECTIONS || [];
@@ -22,12 +22,12 @@
   main.innerHTML = `
     <a class="back" href="index.html">${icon('back')}Command Center</a>
     <div class="top">${icon('film', 'i big')}<h1>How-to videos</h1>
-      <p>${V.length} videos, ${Math.round(total / 3600)} hours, from ${channels.length} preparedness channels. They play in the library (Kiwix), with no internet.</p>
+      <p>${V.length} videos, ${Math.round(total / 3600)} hours, from ${channels.length} preparedness channels. They play right here, from the drive, with no internet.</p>
       <div class="search">${icon('search')}<input id="q" type="search" placeholder="Search ${V.length} videos…" autocomplete="off"></div>
     </div>
     <div class="tabs" id="tabs"></div>
     <div id="out"></div>
-    <p id="kiwix" style="color:var(--mute);font-size:14px;margin-top:28px"></p>`;
+`;
 
   const tabs = [['all', 'Top picks'], ...TOPICS.filter(t => videosFor(t.id, 1).length).map(t => [t.id, t.title]), ...channels.map(ch => ['ch:' + ch, ch])];
   let tab = params.get('t') || 'all';
@@ -59,9 +59,6 @@
   $('#q').addEventListener('input', render);
   renderTabs(); render();
 
-  checkUp(KIWIX + '/').then(ok => $('#kiwix').innerHTML = ok
-    ? 'Videos open in the library. If one says "not found", stop the Kiwix Hotspot, select all the books (including the six video collections), and start it again.'
-    : `<b style="color:var(--red)">The library is off.</b> Videos need it: open the Kiwix app → Hotspot → select all books → Start.`);
 </script>
 </body>
 </html>

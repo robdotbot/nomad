@@ -31,7 +31,7 @@
   #toggle { top:10px; right:54px; padding:8px 12px; cursor:pointer; border:0; font:inherit; color:var(--uiink); }
   @media (max-width:700px) { #places { top:52px; left:10px; transform:none; } #near { top:100px; width:calc(100% - 20px); max-height:45%; } }
 </style>
-<script src="theme.js"></script>
+<script src="theme.js?v=2"></script>
 </head>
 <body>
 <a class="ui back" href="index.html">← Command Center</a>
@@ -41,7 +41,7 @@
 <div id="map"></div>
 <script src="lib/maplibre-gl.js"></script>
 <script src="lib/basemaps.js"></script>
-<script src="data/near.js"></script>
+<script src="data/near.js?v=2"></script>
 <script>
   const dark = isDark();
   addEventListener('themechange', () => location.reload());  // the basemap colors are baked into the style

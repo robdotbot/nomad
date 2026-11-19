@@ -7,7 +7,8 @@ cd "$N" || exit 1
 
 port_up() { nc -z 127.0.0.1 "$1" 2>/dev/null; }
 
-port_up 8090 || { python3 -m http.server 8090 --bind 127.0.0.1 -d "$N/web" >/dev/null 2>&1 & }
+# Launcher pages + videos streamed from the ZIMs (serve.py, standard library only).
+port_up 8090 || { python3 "$N/serve.py" 8090 >/dev/null 2>&1 & }
 port_up 8091 || { pmtiles serve "$N/maps" --port=8091 --cors='*' >/dev/null 2>&1 & }
 port_up 8092 || { KOLIBRI_HOME="$N/kolibri" kolibri start --port 8092 >/dev/null 2>&1 & }
 # If Ollama isn't already running (e.g. the Homebrew service with ~/.ollama), serve the models on this drive.

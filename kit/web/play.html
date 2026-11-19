@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video</title>
+<link rel="stylesheet" href="app.css?v=2">
+<script src="theme.js?v=2"></script>
+<style>
+  .player { max-width: 1100px; margin: 0 auto; }
+  .screen { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: 18px; overflow: hidden; margin-top: 8px; }
+  .screen video { width: 100%; height: 100%; display: block; background: #000; }
+  .screen .err { position: absolute; inset: 0; display: none; place-items: center; text-align: center; padding: 24px; color: #fff; font-size: 15px; }
+  .screen.failed .err { display: grid; }
+  .vt { font-size: 24px; font-weight: 700; letter-spacing: -.01em; margin: 16px 2px 4px; line-height: 1.2; }
+  .vm { color: var(--mute); font-size: 14px; margin: 0 2px 14px; }
+  .cols { display: grid; grid-template-columns: 1fr 300px; gap: 18px; align-items: start; }
+  .box { background: var(--card); border-radius: 14px; padding: 14px 16px; }
+  .box h3 { margin: 0 0 8px; font-size: 15px; }
+  .chap { display: flex; gap: 10px; width: 100%; text-align: left; font: inherit; font-size: 14px; color: var(--ink); background: none; border: 0; padding: 7px 6px; border-radius: 8px; cursor: pointer; }
+  .chap:hover, .chap.on { background: var(--card2); }
+  .chap span { color: var(--blue); font-variant-numeric: tabular-nums; min-width: 44px; }
+  .desc { white-space: pre-wrap; font-size: 14px; color: var(--mute); max-height: 7.5em; overflow: hidden; position: relative; margin: 0; }
+  .desc.open { max-height: none; }
+  .more { font: inherit; font-size: 14px; color: var(--blue); background: none; border: 0; padding: 6px 0 0; cursor: pointer; }
+  .nav { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .nav a, .nav button { font: inherit; font-size: 14px; font-weight: 600; color: var(--ink); background: var(--card); border: 0; border-radius: 99px; padding: 7px 14px; cursor: pointer; }
+  @media (max-width: 800px) { .cols { grid-template-columns: 1fr; } .vt { font-size: 20px; } .screen { border-radius: 12px; } }
+</style>
+</head>
+<body>
+<main id="main"></main>
+<script src="data/topics.js?v=2"></script>
+<script src="data/videos.js?v=2"></script>
+<script src="app.js?v=2"></script>
+<script>
+  const V = window.VIDEOS || [], C = window.VIDEO_COLLECTIONS || [];
+  const ci = C.findIndex(c => c.book === params.get('b'));
+  const v = V.find(x => x.c === ci && x.s === params.get('s'));
+  const main = $('#main');
+
+  if (!v) {
+    main.innerHTML = `<a class="back" href="watch.html">${icon('back')}Videos</a><h1>Video not found</h1><p style="color:var(--mute)">It may have been removed in a library update. <a style="color:var(--blue)" href="watch.html">Browse all videos</a>.</p>`;
+  } else {
+    const c = C[ci];
+    document.title = v.t;
+    const src = '/zim/' + encodeURIComponent(c.book) + '/' + v.v.split('/').map(encodeURIComponent).join('/');
+    // Up next: same topic first, then the rest of the collection, in list order after this one.
+    const topic = Object.keys(VIDEO_TOPICS).find(t => VIDEO_TOPICS[t].test(v.t));
+    const after = V.slice(V.indexOf(v) + 1).concat(V.slice(0, V.indexOf(v)));
+    const next = [...new Set([...(topic ? after.filter(x => VIDEO_TOPICS[topic].test(x.t) && !VIDEO_SKIP.test(x.t)) : []), ...after.filter(x => x.c === v.c)])].slice(0, 12);
+
+    main.innerHTML = `
+      <a class="back" href="watch.html${topic ? '?t=' + topic : ''}">${icon('back')}Videos</a>
+      <div class="player">
+        <div class="screen" id="screen"><video id="vid" controls autoplay playsinline preload="metadata" ${v.th ? `poster="${esc(v.th)}"` : ''} src="${esc(src)}"></video>
+          <div class="err"><div><b>This video won't play.</b><br>Start NOMAD with <i>Start NOMAD.command</i> on the drive (it runs the video server), then reload.</div></div></div>
+        <div class="vt">${esc(v.t)}</div>
+        <div class="vm">${esc(c.channel)}${v.y ? ' · ' + v.y : ''}${v.d ? ' · ' + fmtDur(v.d) : ''} · plays from the drive, no internet</div>
+        <div class="cols">
+          <div>
+            <div class="box" id="about" style="display:none"><h3>About</h3><p class="desc" id="desc"></p><button class="more" id="moreBtn">Show more</button></div>
+            <div class="nav">${next[0] ? `<a href="${esc(videoHref(next[0]))}">Next video →</a>` : ''}<button onclick="vid.playbackRate = vid.playbackRate === 1 ? 1.5 : 1; this.textContent = 'Speed ' + vid.playbackRate + '×'">Speed 1×</button></div>
+          </div>
+          <div class="box" id="chapters" style="display:none"><h3>Chapters</h3><div id="chaps"></div></div>
+        </div>
+        ${next.length ? `<h2 class="sec">Up next</h2><div class="vrow">${next.map(videoCard).join('')}</div>` : ''}
+      </div>`;
+
+    const vid = $('#vid');
+    window.vid = vid;
+    vid.addEventListener('error', () => $('#screen').classList.add('failed'));
+    // Remember where you stopped, per video.
+    const key = 'nomad.pos.' + c.book + '/' + v.s;
+    try { const t = +localStorage.getItem(key); if (t > 5 && (!v.d || t < v.d - 10)) vid.currentTime = t; } catch {}
+    let last = 0;
+    vid.addEventListener('timeupdate', () => { if (Math.abs(vid.currentTime - last) > 5) { last = vid.currentTime; try { localStorage.setItem(key, String(Math.floor(last))); } catch {} } });
+    vid.addEventListener('ended', () => { try { localStorage.removeItem(key); } catch {} });
+
+    // Description and chapters live in the video's JSON inside the ZIM (needs the server's zstd support).
+    fetch('/zim/' + encodeURIComponent(c.book) + '/videos/' + encodeURIComponent(v.s) + '.json').then(r => r.ok ? r.json() : null).then(m => {
+      if (!m) return;
+      const d = (m.description || '').replace(/https?:\/\/\S+/g, '').replace(/\n{3,}/g, '\n\n').trim();
+      if (d) { $('#about').style.display = ''; $('#desc').textContent = d; }
+      $('#moreBtn').onclick = () => { $('#desc').classList.toggle('open'); $('#moreBtn').textContent = $('#desc').classList.contains('open') ? 'Show less' : 'Show more'; };
+      const ch = (m.chapterList || []).filter(x => x.title && !/^<Untitled/.test(x.title));
+      if (ch.length) {
+        $('#chapters').style.display = '';
+        $('#chaps').innerHTML = ch.map(x => `<button class="chap" data-t="${x.startTime}"><span>${fmtDur(x.startTime)}</span>${esc(x.title)}</button>`).join('');
+        $('#chaps').onclick = e => { const b = e.target.closest('[data-t]'); if (b) { vid.currentTime = +b.dataset.t; vid.play(); } };
+        vid.addEventListener('timeupdate', () => $('#chaps').querySelectorAll('.chap').forEach((b, i, all) =>
+          b.classList.toggle('on', vid.currentTime >= +b.dataset.t && (i === all.length - 1 || vid.currentTime < +all[i + 1].dataset.t))));
+      }
+    }).catch(() => {});
+  }
+</script>
+</body>
+</html>
