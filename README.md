@@ -112,5 +112,5 @@ GitHub release with that changelog section as its notes (needs `gh`).
 
 `backup/` holds the 03:00 launchd job that copies the drive and `~/.ollama/models` to the NAS
 (`HomelabBackups/nomad/` and `kiwix/`). It runs through a tiny signed app so macOS can grant it
-Full Disk Access. `scripts/install-backup.sh` builds and loads it. NAS address and account are at
-the top of `backup/nomad-backup.sh`.
+Full Disk Access. `scripts/install-backup.sh` builds and loads it. NAS address and account go in
+`config.local.sh` (`NAS_IP`, `NAS_USER`), which git ignores.

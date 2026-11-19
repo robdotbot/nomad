@@ -1,6 +1,6 @@
 # NOMAD offline disaster kit
 
-An offline knowledge kit for the Mac, modelled on Project N.O.M.A.D. (which
+An offline knowledge kit for a Mac (or Windows PC), modelled on Project N.O.M.A.D. (which
 only runs on x86 Ubuntu). Everything runs from the **EXTREME PRO** SSD. No internet needed.
 It also runs on a Windows 10/11 PC if the drive is formatted exFAT (see "On Windows" below).
 

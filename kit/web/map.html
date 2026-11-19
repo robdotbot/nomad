@@ -135,7 +135,7 @@
   map.on('moveend', updateList);
   map.on('load', () => {
     if (new URLSearchParams(location.search).get('near')) {
-      if (!startHash) map.jumpTo({ center: [-115.06, 36.09], zoom: 11 });
+      if (!startHash) map.jumpTo({ center: [-115.14, 36.17], zoom: 10 });
       setNear(true);
     }
   });

@@ -2,7 +2,7 @@
 // Anything left as null shows as "add this" on the page. Keep secrets (passwords, account numbers,
 // SSNs) in the encrypted vault, not here: this file sits unencrypted on the drive and the NAS.
 window.FAMILY = {
-  home: null,                 // e.g. 'Henderson, NV' (shown on checklists)
+  home: null,                 // e.g. 'Springfield, NV' (shown on checklists)
   people: [],                 // e.g. [{ name: 'Alex', role: 'Parent', born: 1985, meds: 'none', allergies: 'penicillin' }]
   contacts: [
     // { name: 'Out-of-area contact', who: 'Aunt Sam (Phoenix)', phone: '602-555-0100', note: 'Everyone texts here' },
@@ -10,7 +10,7 @@ window.FAMILY = {
   meetups: {
     near: null,               // just outside, e.g. 'Mailbox at the end of the driveway'
     neighborhood: null,       // e.g. 'Park entrance on Main St'
-    outOfTown: null,          // e.g. 'Grandma\'s house, San Antonio'
+    outOfTown: null,          // e.g. 'Grandma\'s house, two states away'
   },
   radio: {
     gmrs: null,               // agreed family channel, e.g. 'GMRS 15 (462.550), PL 141.3'

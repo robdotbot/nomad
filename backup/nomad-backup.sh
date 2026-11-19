@@ -13,8 +13,12 @@ setopt pipefail   # an rsync failure must not be hidden by the grep after it
 export PATH="/opt/homebrew/bin:$HOME/.local/bin:/usr/bin:/bin:/usr/sbin:/sbin"
 SSD="/Volumes/EXTREME PRO/NOMAD"
 NAS="/Volumes/HomelabBackups"
-NAS_IP="192.168.1.20"   # the Keychain login is saved under the IP, not nas.local
-NAS_URL="smb://backup@$NAS_IP/HomelabBackups"
+# NAS address and SMB account come from config.local.sh (git-ignored), e.g.
+#   NAS_IP=192.168.1.20      the Keychain login is saved under the IP, not the .local name
+#   NAS_USER=backup
+[[ -f "${0:A:h}/../config.local.sh" ]] && source "${0:A:h}/../config.local.sh"
+: ${NAS_IP:?set NAS_IP in config.local.sh} ${NAS_USER:?set NAS_USER in config.local.sh}
+NAS_URL="smb://$NAS_USER@$NAS_IP/HomelabBackups"
 
 log()    { print -r -- "$(date '+%F %T') $*"; }
 notify() { osascript -e "display notification \"$1\" with title \"NOMAD backup\"" 2>/dev/null; }
@@ -25,7 +29,7 @@ log "start"
 
 if [[ ! -d "$NAS/kiwix" ]]; then
   # Mount only with a login saved in Keychain, so a 3 a.m. run never pops a password dialog.
-  security find-internet-password -s "$NAS_IP" -a backup >/dev/null 2>&1 \
+  security find-internet-password -s "$NAS_IP" -a "$NAS_USER" >/dev/null 2>&1 \
     || fail "NAS not mounted and no saved Keychain login (connect once in Finder with 'Remember this password')"
   osascript -e "mount volume \"$NAS_URL\"" >/dev/null 2>&1
   sleep 3
