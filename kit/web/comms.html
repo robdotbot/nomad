@@ -9,6 +9,23 @@
   :root {
     --paper: #efefed; --card: #fff; --ink: #111; --mute: #6b6b6b; --line: #1a1a1a; --hair: #d9d9d6;
     --tag: #e3efe3; --tagink: #2f6b3a; --warn: #fbe9e7; --warnink: #a3321f;
+    --acc: #0b0b0b; --accink: #fff; --accmute: #a9a9a9; --accline: #333; --acctag: #24452b; --acctagink: #bfe6c6;
+    --key: #fafafa; --keyline: #999; --accent-key: #222; color-scheme: light;
+  }
+  /* Dark: follows the system unless the toggle picked one. The black accent card flips to white. */
+  :root[data-theme="dark"] {
+    --paper: #0e0e0f; --card: #18181a; --ink: #f1f1ef; --mute: #9b9b98; --line: #d8d8d4; --hair: #2e2e30;
+    --tag: #1f3524; --tagink: #9fd8aa; --warn: #3a1d18; --warnink: #ff9a85;
+    --acc: #f1f1ef; --accink: #0e0e0f; --accmute: #5a5a58; --accline: #cfcfcb; --acctag: #d5ebd8; --acctagink: #24502d;
+    --key: #26262a; --keyline: #555; --accent-key: #fff; color-scheme: dark;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #0e0e0f; --card: #18181a; --ink: #f1f1ef; --mute: #9b9b98; --line: #d8d8d4; --hair: #2e2e30;
+      --tag: #1f3524; --tagink: #9fd8aa; --warn: #3a1d18; --warnink: #ff9a85;
+      --acc: #f1f1ef; --accink: #0e0e0f; --accmute: #5a5a58; --accline: #cfcfcb; --acctag: #d5ebd8; --acctagink: #24502d;
+      --key: #26262a; --keyline: #555; --accent-key: #fff; color-scheme: dark;
+    }
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
@@ -20,7 +37,7 @@
   .back:hover { color: var(--ink); }
   .toc { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 18px; }
   .toc a { font-size: 12px; text-decoration: none; border: 1px solid var(--line); border-radius: 99px; padding: 4px 10px; background: var(--card); }
-  .toc a:hover { background: var(--ink); color: #fff; }
+  .toc a:hover { background: var(--ink); color: var(--paper); }
 
   .slide { background: var(--paper); border: 1px solid var(--hair); border-radius: 4px; padding: 26px 24px 18px; margin: 0 0 22px; break-inside: avoid; }
   .label { font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: var(--mute); margin: 0 0 6px; font-weight: 500; }
@@ -36,12 +53,12 @@
   .pill.sm { font-size: 11px; padding: 2px 9px; }
 
   .card { background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 16px 18px; }
-  .card.black { background: #0b0b0b; color: #fff; border-color: #0b0b0b; }
-  .card.black .label, .card.black small, .card.black .mute { color: #a9a9a9; }
-  .card.black .pill { background: transparent; border-color: #fff; color: #fff; }
+  .card.black { background: var(--acc); color: var(--accink); border-color: var(--acc); }
+  .card.black .label, .card.black small, .card.black .mute { color: var(--accmute); }
+  .card.black .pill { background: transparent; border-color: var(--accink); color: var(--accink); }
   .card.dash { border-style: dashed; }
   .tag { display: inline-block; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; background: var(--tag); color: var(--tagink); border-radius: 99px; padding: 3px 9px; font-weight: 600; }
-  .card.black .tag { background: #24452b; color: #bfe6c6; }
+  .card.black .tag { background: var(--acctag); color: var(--acctagink); }
   .tag.warn { background: var(--warn); color: var(--warnink); }
 
   /* Phases */
@@ -56,7 +73,7 @@
   .reach { grid-column: 1 / -1; border-top: 1px solid var(--hair); padding-top: 10px; font-size: 12px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
   .reach .label { margin: 0 6px 0 0; font-size: 9px; }
   .mini { grid-column: 1 / -1; border-top: 1px dashed var(--hair); padding-top: 10px; font-size: 12.5px; }
-  .card.black .mini, .card.black .reach { border-color: #333; }
+  .card.black .mini, .card.black .reach { border-color: var(--accline); }
   .mini b { font-weight: 700; }
   .arrow { display: block; width: 18px; height: 22px; margin: 4px 0 4px 34px; }
 
@@ -85,8 +102,8 @@
   .step ol { margin: 10px 0 0; padding-left: 20px; font-size: 13px; }
   .step li { margin: 4px 0; }
   .step .n { font-size: 11px; font-weight: 700; border: 1px solid currentColor; border-radius: 99px; width: 22px; height: 22px; display: inline-grid; place-items: center; flex: none; }
-  kbd { font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; border: 1px solid #999; border-bottom-width: 2px; border-radius: 4px; padding: 2px 5px; background: #fafafa; color: #111; white-space: nowrap; }
-  .card.black kbd { background: #222; color: #fff; border-color: #666; }
+  kbd { font: 600 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; border: 1px solid var(--keyline); border-bottom-width: 2px; border-radius: 4px; padding: 2px 5px; background: var(--key); color: var(--ink); white-space: nowrap; }
+  .card.black kbd { background: transparent; color: var(--accink); border-color: var(--accmute); }
 
   /* Tables */
   .tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; }
@@ -102,7 +119,7 @@
   .abc b { display: inline-block; width: 14px; }
 
   .note { font-size: 12.5px; color: var(--mute); margin: 12px 0 0; }
-  .btn { display: inline-flex; gap: 6px; align-items: center; background: var(--ink); color: #fff; text-decoration: none; border-radius: 99px; padding: 7px 14px; font-size: 13px; border: 0; cursor: pointer; font: inherit; font-size: 13px; }
+  .btn { display: inline-flex; gap: 6px; align-items: center; background: var(--ink); color: var(--paper); text-decoration: none; border-radius: 99px; padding: 7px 14px; font-size: 13px; border: 0; cursor: pointer; font: inherit; font-size: 13px; }
   .btn.ghost { background: var(--card); color: var(--ink); border: 1px solid var(--line); }
   .foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; border-top: 1.5px solid var(--line); margin-top: 22px; padding-top: 10px; font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
   .foot b { font-size: 10px; display: inline-flex; gap: 6px; align-items: center; }
@@ -120,6 +137,9 @@
     .pace .ch { grid-column: 2; text-align: left; }
   }
   @media print {
+    :root, :root[data-theme] { --paper: #fff; --card: #fff; --ink: #111; --mute: #6b6b6b; --line: #1a1a1a; --hair: #d9d9d6;
+      --tag: #e3efe3; --tagink: #2f6b3a; --warn: #fbe9e7; --warnink: #a3321f; --acc: #0b0b0b; --accink: #fff; --accmute: #a9a9a9;
+      --accline: #333; --acctag: #24452b; --acctagink: #bfe6c6; --key: #fafafa; --keyline: #999; }
     body { background: #fff; font-size: 12px; }
     .wrap { max-width: none; padding: 0; }
     .back, .toc, .noprint { display: none !important; }
@@ -128,6 +148,25 @@
     .tag { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
+<script id="theme">
+  // Theme toggle: remembers the choice per browser; with no choice it follows the system.
+  (() => {
+    let t = null; try { t = localStorage.getItem('nomad.theme'); } catch {}
+    if (t) document.documentElement.dataset.theme = t;
+    window.toggleTheme = () => {
+      const dark = document.documentElement.dataset.theme
+        ? document.documentElement.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      const next = dark ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      try { localStorage.setItem('nomad.theme', next); } catch {}
+      document.querySelectorAll('[data-theme-label]').forEach(b => b.textContent = next === 'dark' ? 'Light mode' : 'Dark mode');
+    };
+    addEventListener('DOMContentLoaded', () => {
+      const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+      document.querySelectorAll('[data-theme-label]').forEach(b => b.textContent = dark ? 'Light mode' : 'Dark mode');
+    });
+  })();
+</script>
 </head>
 <body>
 <div class="wrap" id="app"></div>
@@ -179,6 +218,7 @@ document.getElementById('app').innerHTML = `
   <a href="#priorities">Priorities</a><a href="#layers">Layers</a><a href="#plan">Our plan</a><a href="#radio">Know the Mini</a>
   <a href="#howto">How-to</a><a href="#program">Program it</a><a href="#talk">On the air</a><a href="#kit">Kit &amp; upgrades</a>
   <button class="btn ghost" style="padding:3px 10px;font-size:12px" onclick="print()">${ic('print', 'width="13" height="13"')}Print</button>
+  <button class="btn ghost" style="padding:3px 10px;font-size:12px" onclick="toggleTheme()"><span data-theme-label>Dark mode</span></button>
 </nav>
 
 <!-- 1 · PRIORITIES -->
