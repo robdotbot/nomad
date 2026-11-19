@@ -6,27 +6,32 @@
 <title>Offline Map</title>
 <link rel="stylesheet" href="lib/maplibre-gl.css">
 <style>
-  html, body, #map { margin:0; height:100%; background:#1c1c1e; font:14px -apple-system, sans-serif; }
-  .ui { position:absolute; z-index:2; background:rgba(28,28,30,.92); color:#f5f5f7; border-radius:12px; box-shadow:0 4px 18px rgba(0,0,0,.35); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); }
+  :root { --ui:rgba(28,28,30,.92); --uiink:#f5f5f7; --uimute:#98989f; --uihair:rgba(255,255,255,.12); --uihov:rgba(255,255,255,.1); --mapbg:#1c1c1e; }
+  :root[data-theme="light"] { --ui:rgba(255,255,255,.94); --uiink:#1c1c1e; --uimute:#6e6e73; --uihair:rgba(0,0,0,.1); --uihov:rgba(0,0,0,.06); --mapbg:#f2f2f7; }
+  @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) { --ui:rgba(255,255,255,.94); --uiink:#1c1c1e; --uimute:#6e6e73; --uihair:rgba(0,0,0,.1); --uihov:rgba(0,0,0,.06); --mapbg:#f2f2f7; } }
+  html, body, #map { margin:0; height:100%; background:var(--mapbg); font:14px -apple-system, sans-serif; }
+  .theme-fab { right:10px !important; bottom:auto !important; top:112px; background:var(--ui) !important; color:var(--uiink); }
+  .ui { position:absolute; z-index:2; background:var(--ui); color:var(--uiink); border-radius:12px; box-shadow:0 4px 18px rgba(0,0,0,.35); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); }
   .back { top:10px; left:10px; padding:8px 12px; text-decoration:none; color:#0a84ff; }
   #places { top:10px; left:50%; transform:translateX(-50%); display:flex; gap:4px; padding:4px; }
   #places button, #near button { font:inherit; color:inherit; background:transparent; border:0; padding:6px 10px; border-radius:8px; cursor:pointer; }
-  #places button:hover, #near button:hover { background:rgba(255,255,255,.12); }
+  #places button:hover, #near button:hover { background:var(--uihov); }
   #near { top:58px; left:10px; width:300px; max-height:calc(100% - 120px); display:none; flex-direction:column; overflow:hidden; }
   #near.open { display:flex; }
   #near h3 { margin:12px 14px 6px; font-size:16px; }
-  #kinds { display:flex; flex-wrap:wrap; gap:6px; padding:0 12px 10px; border-bottom:1px solid rgba(255,255,255,.12); }
-  #kinds label { display:flex; align-items:center; gap:5px; padding:4px 8px; border-radius:99px; background:rgba(255,255,255,.08); cursor:pointer; user-select:none; }
+  #kinds { display:flex; flex-wrap:wrap; gap:6px; padding:0 12px 10px; border-bottom:1px solid var(--uihair); }
+  #kinds label { display:flex; align-items:center; gap:5px; padding:4px 8px; border-radius:99px; background:var(--uihov); cursor:pointer; user-select:none; }
   #kinds i { width:10px; height:10px; border-radius:50%; }
   #list { overflow-y:auto; }
-  #list div { padding:9px 14px; border-top:1px solid rgba(255,255,255,.08); cursor:pointer; display:flex; gap:10px; align-items:baseline; }
-  #list div:hover { background:rgba(255,255,255,.08); }
+  #list div { padding:9px 14px; border-top:1px solid var(--uihair); cursor:pointer; display:flex; gap:10px; align-items:baseline; }
+  #list div:hover { background:var(--uihov); }
   #list i { width:10px; height:10px; border-radius:50%; flex:none; transform:translateY(1px); }
-  #list span { margin-left:auto; color:#98989f; white-space:nowrap; }
-  #list p { color:#98989f; margin:12px 14px; }
-  #toggle { top:10px; right:54px; padding:8px 12px; cursor:pointer; border:0; font:inherit; color:#f5f5f7; }
+  #list span { margin-left:auto; color:var(--uimute); white-space:nowrap; }
+  #list p { color:var(--uimute); margin:12px 14px; }
+  #toggle { top:10px; right:54px; padding:8px 12px; cursor:pointer; border:0; font:inherit; color:var(--uiink); }
   @media (max-width:700px) { #places { top:52px; left:10px; transform:none; } #near { top:100px; width:calc(100% - 20px); max-height:45%; } }
 </style>
+<script src="theme.js"></script>
 </head>
 <body>
 <a class="ui back" href="index.html">← Command Center</a>
@@ -38,7 +43,8 @@
 <script src="lib/basemaps.js"></script>
 <script src="data/near.js"></script>
 <script>
-  const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const dark = isDark();
+  addEventListener('themechange', () => location.reload());  // the basemap colors are baked into the style
   const flavor = dark ? 'dark' : 'light';
   const base = location.origin + location.pathname.replace(/[^/]*$/, '');
   // One map file per region in maps/ (served by pmtiles on :8091). Regions don't overlap, so each

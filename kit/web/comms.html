@@ -148,25 +148,7 @@
     .tag { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
 </style>
-<script id="theme">
-  // Theme toggle: remembers the choice per browser; with no choice it follows the system.
-  (() => {
-    let t = null; try { t = localStorage.getItem('nomad.theme'); } catch {}
-    if (t) document.documentElement.dataset.theme = t;
-    window.toggleTheme = () => {
-      const dark = document.documentElement.dataset.theme
-        ? document.documentElement.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-      const next = dark ? 'light' : 'dark';
-      document.documentElement.dataset.theme = next;
-      try { localStorage.setItem('nomad.theme', next); } catch {}
-      document.querySelectorAll('[data-theme-label]').forEach(b => b.textContent = next === 'dark' ? 'Light mode' : 'Dark mode');
-    };
-    addEventListener('DOMContentLoaded', () => {
-      const dark = document.documentElement.dataset.theme ? document.documentElement.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-      document.querySelectorAll('[data-theme-label]').forEach(b => b.textContent = dark ? 'Light mode' : 'Dark mode');
-    });
-  })();
-</script>
+<script src="theme.js"></script>
 </head>
 <body>
 <div class="wrap" id="app"></div>
