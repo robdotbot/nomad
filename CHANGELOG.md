@@ -3,6 +3,15 @@
 Releases are on GitHub: https://github.com/robdotbot/nomad/releases. Each one has the Command Center
 zip (see "Releases" in the README). `scripts/release.sh` uses the section for its version as the notes.
 
+## Unreleased
+
+- **Dog Emergency** checklist on the home screen: when to go to the ER vet now (bloat, heatstroke,
+  snake bite, poisoning…), poison lines, muzzling, bleeding, choking, dog CPR, seizures, heat and
+  pavement, evacuating with a dog, lost dogs.
+- New **Pets** topic, with the UF/IFAS "Emergency First Aid for Cats and Dogs" guide and dog videos.
+- Near Home map: **Vets** layer (vets and animal shelters from OpenStreetMap); `map.html?near=1&show=Vets`.
+- Family Plan: Pets panel and a `pets` list in `family.js` (vet and 24/7 ER vet numbers).
+
 ## 1.0.0 (2026-11-18)
 
 First release.

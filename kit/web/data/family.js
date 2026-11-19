@@ -27,5 +27,8 @@ window.FAMILY = {
     // { name: 'Pediatrician', phone: '' },
   ],
   insurance: null,            // insurer and policy name only; documents go in the vault
-  pets: [],
+  pets: [
+    // { name: 'Biscuit', breed: 'Lab mix', weight: '60 lb', meds: 'none', microchip: 'HomeAgain',
+    //   vet: 'Main St Animal Hospital 555-0100', erVet: 'nearest 24/7 ER vet and phone' },
+  ],
 };

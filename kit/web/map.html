@@ -60,6 +60,7 @@
     ['Drinking water', '#64d2ff', ['drinking_water']],
     ['Groceries', '#bf5af2', ['supermarket']],
     ['Fuel', '#ffd60a', ['fuel']],
+    ['Vets', '#ac8e68', ['veterinary', 'animal_shelter']],
   ];
   const sources = {}, layers = [];
   REGIONS.forEach((r, i) => {
@@ -97,7 +98,9 @@
 
   // Near Home panel
   let near = false;
-  const on = new Set(KINDS.map(k => k[0]).filter(n => !['Groceries', 'Fuel', 'Drinking water'].includes(n)));
+  // map.html?near=1&show=Vets opens with just that kind (the dog checklist links here).
+  const show = new URLSearchParams(location.search).get('show');
+  const on = new Set(KINDS.map(k => k[0]).filter(n => show ? n === show : !['Groceries', 'Fuel', 'Drinking water', 'Vets'].includes(n)));
   const kindsEl = document.getElementById('kinds'), listEl = document.getElementById('list');
   KINDS.forEach(([name, c]) => {
     const l = document.createElement('label');

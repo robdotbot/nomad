@@ -35,12 +35,12 @@ Faster, if the NAS backup exists: `scripts/restore-from-nas.sh` copies everythin
 |---|---|---|---|
 | `kit` | Launcher, map and chat pages, start script, README, guide index | <1 MB | `kit/` in this repo |
 | `web` | MapLibre, Protomaps basemaps, offline fonts and sprites, CyberChef | 95 MB | jsDelivr, GitHub |
-| `guides` | Army first aid and survival, FEMA, Las Vegas, San Antonio, radio manuals, NIFOG, ARES, FAA airband, 6 Bibles (incl. Vietnamese), religions of Vietnam (Buddhist sutras, Tao Te Ching, Analects, Catholic catechism) | 300 MB | `manifests/guides.tsv`, `manifests/bibles.txt` |
+| `guides` | Army first aid and survival, FEMA, Las Vegas, San Antonio, radio manuals, NIFOG, ARES, FAA airband, 6 Bibles (incl. Vietnamese), religions of Vietnam (Buddhist sutras, Tao Te Ching, Analects, Catholic catechism), dog and cat first aid | 300 MB | `manifests/guides.tsv`, `manifests/bibles.txt` |
 | `docs-index` | Page counts and first-page thumbnails for the launcher (`web/data/docs.js`, `web/thumbs/`) | 5 MB | the guides |
 | `installers` | Kiwix, Ollama, Python, Kolibri wheels, pmtiles, Baofeng CPS; writes `SHA256SUMS` | 350 MB | `manifests/installers.tsv` |
 | `windows` | Portable Windows x64 apps for `Start NOMAD.bat`: Python 3.14 (embeddable), kiwix-serve, pmtiles, Ollama, Kolibri (unpacked wheel), unpacked into `windows/` | 3.5 GB | `manifests/windows.tsv` |
 | `maps` | US West (Las Vegas, Henderson) and San Antonio, street level | 3.6 GB | Protomaps build, `manifests/maps.tsv` |
-| `near-index` | Hospitals, fire stations, police, pharmacies, water, groceries, fuel around each city (`web/data/near.js`); needs node | 0.1 MB | the maps |
+| `near-index` | Hospitals, fire stations, police, pharmacies, water, groceries, fuel, vets around each city (`web/data/near.js`); needs node | 0.1 MB | the maps |
 | `zim` | Wikipedia (maxi), MDWiki, iFixit, Wikivoyage, 5 zimgit guides, 6 how-to video collections; SHA-256 checked | 165 GB | `manifests/zim.txt` |
 | `videos-index` | Video titles, lengths and thumbnails for the Watch pages (`web/data/videos.js`, `web/vthumbs/`); needs python3 | 20 MB | the video ZIMs |
 | `models` | `qwen3.8:27b-q8_0`, `qwen3.5:9b` | 37 GB | Ollama |

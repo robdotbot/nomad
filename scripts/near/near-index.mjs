@@ -1,4 +1,4 @@
-// Builds web/data/near.js: hospitals, fire stations, police, pharmacies, water, groceries and fuel
+// Builds web/data/near.js: hospitals, fire stations, police, pharmacies, water, groceries, fuel, vets
 // around each home city, read from the offline map files. The map's own tiles only carry these
 // places at zoom 15, so the Near Home list needs this index to show a whole city at once.
 // Usage: node near-index.mjs <NOMAD dir>
@@ -12,7 +12,7 @@ const AREAS = [   // [name, map file, west, south, east, north]
   ['Las Vegas & Henderson', 'us-west', -115.45, 35.90, -114.85, 36.35],
   ['San Antonio', 'san-antonio', -98.80, 29.20, -98.20, 29.75],
 ];
-const KINDS = new Set(['hospital', 'clinic', 'doctors', 'fire_station', 'police', 'pharmacy', 'drinking_water', 'supermarket', 'fuel']);
+const KINDS = new Set(['hospital', 'clinic', 'doctors', 'fire_station', 'police', 'pharmacy', 'drinking_water', 'supermarket', 'fuel', 'veterinary', 'animal_shelter']);
 const Z = 15;
 
 class FileSource {

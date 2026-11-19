@@ -67,7 +67,8 @@
           <li>Water (1 gal/person/day for 3 days) and 3 days of food</li><li>Medications (7 days), glasses, copies of prescriptions</li>
           <li>First-aid kit, tourniquet, N95 masks</li><li>Flashlight or headlamp, batteries, radio, phone chargers, power bank</li>
           <li>Cash in small bills, copies of IDs and insurance (or this drive's vault)</li><li>Change of clothes, sturdy shoes, blanket</li>
-          <li>Kids: diapers, wipes, formula or snacks, a comfort toy</li><li>Pets: food, leash or carrier, vaccination records</li></ul>`)}
+          <li>Kids: diapers, wipes, formula or snacks, a comfort toy</li><li>Pets: 3 days of food and water, leash or carrier, meds, vaccination records, a photo with you</li></ul>`)}
+        ${panel('Pets', (F.pets || []).length ? rows(F.pets.map(p => [p.name, [p.breed, p.weight, p.meds && 'meds: ' + p.meds, p.microchip && 'chip: ' + p.microchip, p.vet && 'vet: ' + p.vet, p.erVet && 'ER vet: ' + p.erVet].filter(Boolean).map(esc).join(' · ')])) : todo('your dog, your vet and the nearest 24/7 emergency vet') + ' <a href="emergency.html?id=dog" style="color:var(--blue)">Dog Emergency checklist</a>')}
         ${panel('People', (F.people || []).length ? rows(F.people.map(p => [p.name, [p.role, p.born && 'born ' + p.born, p.meds && 'meds: ' + p.meds, p.allergies && 'allergies: ' + p.allergies].filter(Boolean).map(esc).join(' · ')])) : todo('each person, with medications and allergies'))}
       </div>`,
 

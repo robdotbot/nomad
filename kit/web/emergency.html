@@ -44,9 +44,13 @@
         <div class="btns">
           <button id="reset">Reset checklist</button><button onclick="print()">Print</button>
           <a href="emergency.html">All emergencies</a>
+          ${(e.links || []).map(([l, h]) => `<a href="${esc(h)}">${esc(l)}</a>`).join('')}
           ${topic ? `<a href="topic.html?id=${topic.id}">${esc(topic.title)} guides</a>` : ''}
           <a href="chat.html?q=${encodeURIComponent(e.title.replace('?', '') + ': what should I do?')}">Ask the AI</a>
         </div>
+        ${e.pets ? `<div class="note">${(F.pets || []).length
+          ? F.pets.map(p => esc([p.name, p.breed, p.weight && p.weight, p.meds && 'meds: ' + p.meds, p.vet && 'vet: ' + p.vet, p.erVet && 'ER vet: ' + p.erVet].filter(Boolean).join(' · '))).join('<br>')
+          : 'Add your dog, your vet and the nearest 24/7 emergency vet (with phone numbers) to <b>pets</b> in web/data/family.js.'}</div>` : ''}
         ${F.home || (F.people || []).length ? `<div class="note">${esc([(F.people || []).map(p => p.name).join(', '), F.home].filter(Boolean).join(' · '))}</div>` : ''}
       </div>
       ${e.phases.map((p, pi) => `

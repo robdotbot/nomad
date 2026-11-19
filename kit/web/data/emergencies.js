@@ -166,6 +166,43 @@ window.EMERGENCIES = [
   ],
 },
 {
+  id: 'dog', title: 'Dog Emergency', sub: 'Poisoned, hurt, overheated, choking', icon: 'paw', c: ['#c08a4a', '#7a5226'], topic: 'pets', pets: true,
+  links: [['Vets near home', 'map.html?near=1&show=Vets']],
+  phases: [
+    { name: 'Go to an emergency vet now if', items: [
+      { t: 'Not breathing, choking, or gums pale, grey or blue', d: 'Start CPR or choking help below on the way. Call ahead so they\'re ready.', urgent: true },
+      { t: 'Swollen, tight belly and retching with nothing coming up', d: 'Bloat (GDV): the stomach twists. It can kill within hours, mostly in big, deep-chested dogs. Don\'t wait to see.', urgent: true },
+      { t: 'Hit by a car, a fall, or a fight', d: 'Even if they seem fine: internal bleeding can show up hours later.', urgent: true },
+      { t: 'Seizure over 5 minutes, or several in a row', d: 'Also collapse, can\'t stand, or sudden wobbly walking.', urgent: true },
+      { t: 'Overheated: heavy panting, drooling, bright red gums, wobbly', d: 'Heatstroke. Start cooling first (below), then drive with the A/C on.', urgent: true },
+      { t: 'Straining to pee with little or nothing coming out', d: 'A blocked bladder, mostly in males, can kill in a day or two.' },
+      { t: 'Snake bite', d: 'Rattlesnakes in both Nevada and Texas, plus copperheads and coral snakes around San Antonio. Keep the dog still and calm, carry it if you can, take the collar off (swelling). No cutting, sucking, ice or tourniquet. Go now: antivenom works best early.', urgent: true },
+    ]},
+    { name: 'Ate something bad', items: [
+      { t: 'Call a pet poison line', d: 'ASPCA Animal Poison Control 888-426-4435 or Pet Poison Helpline 855-764-7661, 24/7 (a fee is charged). Have the package, the dog\'s weight and the time it ate it.', urgent: true },
+      { t: 'Don\'t make them vomit unless told to', d: 'Caustic things (drain cleaner, batteries) and sharp things do more damage coming back up. Never use salt or your fingers.' },
+      { t: 'The common poisons', d: 'Xylitol (sugar-free gum, some peanut butters), grapes and raisins, chocolate (dark is worst), onions and garlic, human pain pills (ibuprofen, naproxen, acetaminophen), ADHD and sleep meds, marijuana, rat and snail bait, antifreeze, lily plants, mushrooms.' },
+      { t: 'Bring the package or a photo of it', d: 'And some of the vomit if there is any. The vet needs to know exactly what and how much.' },
+    ]},
+    { name: 'First aid on the way', items: [
+      { t: 'Muzzle a hurt dog first', d: 'Even the sweetest dog bites when in pain. Loop a leash or gauze strip around the snout, tie under the chin, then behind the ears. Not if it\'s vomiting or struggling to breathe.' },
+      { t: 'Bleeding: press hard', d: 'Clean cloth or gauze, firm pressure for 5 minutes. Add layers on top if it soaks through; don\'t lift to look.', urgent: true },
+      { t: 'Heatstroke: cool, not ice', d: 'Shade or A/C, then cool (not ice-cold) water on the belly, paws and neck, with a fan. Small sips of water only. Stop cooling once they\'re calmer; still see a vet.', urgent: true },
+      { t: 'Choking', d: 'Look in the mouth and pull out anything you can see, carefully. Then 5 firm back blows between the shoulder blades. Still stuck: small dog on its back against you, large dog standing; arms around the belly just behind the ribs, 5 quick thrusts in and up. Repeat.', urgent: true },
+      { t: 'CPR: no breathing, no heartbeat', d: 'On its right side (flat-chested breeds like bulldogs: on its back). Push the widest part of the chest down a third to half its width, 100–120 a minute (the beat of "Stayin\' Alive"). After 30 pushes, hold the mouth shut and give 2 breaths into the nose. Keep going on the way to the vet.', urgent: true },
+      { t: 'Seizure: hands off the mouth', d: 'Dogs don\'t swallow their tongues. Move them away from stairs, the pool and furniture, dim the lights, time it. Cool them with a fan if it runs long.' },
+      { t: 'Hurt leg or back', d: 'Don\'t splint. Slide a board, door or blanket under a dog that can\'t walk and carry it flat.' },
+    ]},
+    { name: 'Disasters, heat and lost dogs', items: [
+      { t: 'Never leave a dog in a car', d: 'In a Vegas or Texas summer a parked car passes 120 °F within minutes, windows cracked or not.', urgent: true },
+      { t: 'Pavement test: 7 seconds', d: 'If the back of your hand can\'t stay on the asphalt for 7 seconds, it will burn paws. Walk early morning or late evening, on grass.' },
+      { t: 'Evacuating: the dog comes too', d: 'Leash, collar with ID tag, carrier or crate, 3+ days of food and water, meds, bowls, poop bags, vaccine records (shelters ask for rabies proof), and a recent photo of you with the dog.' },
+      { t: 'Storms and fireworks: keep them in', d: 'Scared dogs bolt. Close doors and the gate, ID tag on, microchip registered with your current phone number.' },
+      { t: 'Lost dog', d: 'Search the neighborhood calling softly, leave something that smells of home outside, then check the city animal shelter in person every day (San Antonio: call 311). Post the photo on Nextdoor and local lost-pet groups once online.' },
+    ]},
+  ],
+},
+{
   id: 'gas', title: 'Gas Leak?', sub: 'Rotten-egg smell or hissing', icon: 'fuel', c: ['#e6b800', '#9c7a00'], topic: 'home',
   phases: [
     { name: 'Get out first', items: [

@@ -45,6 +45,7 @@ const ICONS = {
   phoneOff: '<path d="M10.7 13.3a16 16 0 0 0 3.4 2.6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.4 2.1L8.1 9.9M22 2 2 22"/>',
   users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
   check: '<path d="M20 6 9 17l-5-5"/>',
+  paw: '<circle cx="11" cy="4" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="20" cy="16" r="2"/><path d="M9 10a5 5 0 0 1 5 5v3.5a3.5 3.5 0 0 1-6.84 1.05Q6.52 17.48 4.46 16.84A3.5 3.5 0 0 1 5.5 10Z"/>',
   back: '<path d="m15 18-6-6 6-6"/>',
   life: '<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="m4.9 4.9 4.3 4.3M14.8 14.8l4.3 4.3M14.8 9.2l4.3-4.3M4.9 19.1l4.3-4.3"/>',
   film: '<rect x="2" y="2" width="20" height="20" rx="2.2"/><path d="M7 2v20M17 2v20M2 12h20M2 7h5M2 17h5M17 17h5M17 7h5"/>',
@@ -59,6 +60,7 @@ const grad = (c1, c2) => `--c1:${c1};--c2:${c2}`;
 
 // Docs: generated index (data/docs.js) plus friendly titles.
 const DOC_TITLES = {
+  'guides/pets/Emergency-First-Aid-for-Cats-and-Dogs-UF-SART.pdf': 'Emergency First Aid for Cats and Dogs (UF/IFAS SART)',
   'guides/religion/Lotus-Sutra-Kern-1884.pdf': 'Lotus Sutra (Kinh Pháp Hoa), Kern 1884',
   'guides/religion/Pure-Land-Diamond-and-Heart-Sutras-1894.pdf': 'Amitābha, Diamond and Heart Sutras (Kinh A Di Đà, Kim Cang, Bát Nhã), 1894',
   'guides/religion/Dhammapada-Muller.html': 'The Dhammapada (Kinh Pháp Cú), Müller',
@@ -178,6 +180,7 @@ const VIDEO_TOPICS = {
   home: /winter|\bheat|shelter|stove|\bhouse|\bhome\b|blackout|earthquake|\bcold\b|freez|\bstorms?\b/i,
   security: /security|defen[cs]e|\blocks?\b|gr[ae]y man|safe room|opsec/i,
   repair: /repair|\bfix|tool|maintenan|sharpen/i,
+  pets: /\bdogs?\b|\bpets?\b|\bpupp(y|ies)\b|canine|\bk-?9\b/i,
   survival: /surviv|bushcraft|knife|knives|\bknots?\b|\bfire\b|navigat|compass|bug.?out|\bedc\b|\bkits?\b|\bcamp|\btarps?\b/i,
 };
 const fmtDur = s => s >= 3600 ? `${Math.floor(s / 3600)}:${String(Math.floor(s % 3600 / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}` : `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
